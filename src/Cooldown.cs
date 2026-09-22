@@ -18,7 +18,7 @@ namespace Homeward
             {
                 return 0;
             }
-            long readyAt = lastUsed + HomewardPlugin.CooldownMinutes.Value * 60L;
+            long readyAt = lastUsed + HomewardPlugin.CooldownSeconds.Value;
             return System.Math.Max(0, readyAt - NowSeconds());
         }
 

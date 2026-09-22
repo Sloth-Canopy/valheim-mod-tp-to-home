@@ -14,7 +14,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Empty plugin loads and logs "Homeward 0.1.0 loaded" in `BepInEx/LogOutput.log` (confirmed 2026-09-21)
 
 ## Phase 1 — MVP: press key, go home
-- [x] BepInEx config: `Hotkey` (KeyboardShortcut, default H), `CooldownMinutes` (60), `AllowWithMetal` (false)
+- [x] BepInEx config: `Hotkey` (KeyboardShortcut, default H), `CooldownSeconds` (3600), `AllowWithMetal` (false)
 - [x] `Update()`: bail if no local player / `Menu.IsVisible()` / `Console.IsVisible()` / `TextInput.IsVisible()` / `Chat.instance.HasFocus()`
 - [x] On hotkey:
   - [x] `HaveCustomSpawnPoint()` else message "You have no home."
@@ -40,7 +40,7 @@ before starting the next — the instant-teleport version will tell you whether
 
 ## Phase 3 — Polish
 - [ ] Jötunn `CustomStatusEffect` for the cooldown icon in the buff bar
-- [ ] ServerSync: server-enforced `CooldownMinutes` / `AllowWithMetal` / `CastSeconds`
+- [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
 - [ ] Config: `CancelOnDamage` toggle
 - [ ] Remaining-cooldown text on early press
 

@@ -15,7 +15,7 @@ namespace Homeward
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
-        internal static ConfigEntry<int> CooldownMinutes;
+        internal static ConfigEntry<int> CooldownSeconds;
         internal static ConfigEntry<float> CastSeconds;
         internal static ConfigEntry<bool> AllowWithMetal;
         internal static ConfigEntry<bool> CancelOnDamage;
@@ -29,9 +29,9 @@ namespace Homeward
 
             Hotkey = Config.Bind("General", "Hotkey", new KeyboardShortcut(KeyCode.H),
                 "Key that starts the journey home. Press again while channeling to cancel.");
-            CooldownMinutes = Config.Bind("General", "CooldownMinutes", 60,
-                new ConfigDescription("Real-time minutes between uses. Survives logout.",
-                    new AcceptableValueRange<int>(0, 24 * 60)));
+            CooldownSeconds = Config.Bind("General", "CooldownSeconds", 3600,
+                new ConfigDescription("Real-time seconds between uses (3600 = 1 hour). Survives logout.",
+                    new AcceptableValueRange<int>(0, 7 * 24 * 3600)));
             CastSeconds = Config.Bind("General", "CastSeconds", 8f,
                 new ConfigDescription("Seconds you must sit still before the teleport fires. 0 = instant.",
                     new AcceptableValueRange<float>(0f, 60f)));

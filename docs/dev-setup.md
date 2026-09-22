@@ -75,7 +75,14 @@ leftovers or do a real BepInEx install there.
 **Unity version.** Check `<Valheim>/valheim_Data/` if we ever need the editor
 for AssetBundles (Phase 3+). Not needed for a teleport mod.
 
-## Build / deploy loop (once `src/` exists)
+## Testing without waiting an hour
+
+The cooldown default lives in code (`CooldownSeconds = 3600`). For testing, change
+it in the **local cfg only** — `<profile>/BepInEx/config/canpoy.homeward.cfg` —
+e.g. `CooldownSeconds = 5`. The cfg isn't in the repo, so there's nothing to
+remember to revert before pushing.
+
+## Build / deploy loop
 
 ```bash
 cd src && dotnet build -c Release
