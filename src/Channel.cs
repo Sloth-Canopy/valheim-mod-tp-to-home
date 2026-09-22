@@ -19,10 +19,17 @@ namespace Homeward
         private static float _startTime;
         private static Vector3 _startPos;
 
-        // StartEmote writes to the ZDO; Player.UpdateEmote picks it up a frame or two
-        // later and the animator then blends into the sit state. Don't demand
-        // InEmote() && IsSitting() until that has had time to land.
-        private const float EmoteGraceSeconds = 1.0f;
+        // True once the animator has actually been seen in the seated loop. The
+        // sit-down transition isn't tagged "sitting", so IsSitting() is false for
+        // a while after StartEmote — we only enforce it after it has latched.
+        private static bool _seated;
+
+        // StartEmote writes to the ZDO; Player.UpdateEmote picks it up a frame or
+        // two later. Don't demand InEmote() until that round-trip has landed.
+        private const float EmoteGraceSeconds = 0.5f;
+
+        // If the animator never reaches the seated loop by now, something is off.
+        private const float SeatTimeoutSeconds = 3.0f;
         private const float MoveTolerance = 0.5f;
 
         // Player.StopEmote is protected; Harmony's AccessTools gets us at it.
@@ -90,6 +97,7 @@ namespace Homeward
 
             Active = true;
             DamageTaken = false;
+            _seated = false;
             _startTime = Time.time;
             _startPos = player.transform.position;
             HomewardPlugin.Log.LogInfo("Channel started");
@@ -140,12 +148,24 @@ namespace Homeward
             if (player.InPlaceMode()) return "building";
             if (Vector3.Distance(player.transform.position, _startPos) > MoveTolerance) return "moved";
             if (!CanSitHere(player)) return "no solid ground";
-            if (Time.time - _startTime > EmoteGraceSeconds)
+
+            float elapsed = Time.time - _startTime;
+
+            // The game drops the emote on movement input.
+            if (elapsed > EmoteGraceSeconds && !player.InEmote()) return "moved";
+
+            // Animator truth: latch once seated, then require it to stay seated.
+            if (player.IsSitting())
             {
-                // The game drops the emote on movement input; the animator leaves the
-                // sitting state if the player is somehow not actually sitting.
-                if (!player.InEmote()) return "moved";
-                if (!player.IsSitting()) return "not sitting";
+                _seated = true;
+            }
+            else if (_seated)
+            {
+                return "stood up";
+            }
+            else if (elapsed > SeatTimeoutSeconds)
+            {
+                return "not sitting";
             }
             return null;
         }

@@ -36,7 +36,8 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Teleport fires only when the channel completes; cooldown still stamps on arrival
 - [ ] Test in single player: sit animation, bar counts down, each cancel reason fires, fade is plain black, arrival stamps cooldown
 - [x] Swimming exploit fixed (2026-09-22): channel now requires `IsOnGround && !IsSwimming && !IsRiding && !IsAttached` to start, and `InEmote() && IsSitting()` (the real animation) after a 1 s grace
-- [ ] Decide whether the emote grace window (1.0 s) needs tuning on a laggy server
+- [x] "Interrupted (not sitting)" false positive fixed (2026-09-22): `IsSitting()` is false during the sit-down transition, so the seated check now latches on first sight and only then enforces; 3 s ceiling if it never seats
+- [ ] Decide whether the emote grace (0.5 s) / seat timeout (3 s) need tuning on a laggy server
 - ~~Reuse portal VFX/SFX~~ — dropped; the fade-to-black is the effect now
 
 ## Phase 3 — Polish
@@ -53,7 +54,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [ ] Publish
 
 ## Known gotchas (collected as we go)
-- `Player.StartEmote("sit")` returns `true` while swimming / mid-air and `InEmote()` stays true, but the animator never sits. Check `IsSitting()` (animator tag) for the truth — that's what vanilla does.
+- `Player.StartEmote("sit")` returns `true` while swimming / mid-air and `InEmote()` stays true, but the animator never sits. Check `IsSitting()` (animator tag) for the truth — that's what vanilla does. But it reads the *current* state, and the sit-down transition state isn't tagged, so it lags `StartEmote` by a second or two. Latch it rather than using a fixed grace.
 - `TeleportTo` has a built-in `m_teleportCooldown < 2f` guard — it silently returns `false` within 2 s of a previous teleport.
 - `TeleportTo` returning `true` means *started*, not *arrived*. Actual movement happens over later frames in `UpdateTeleport`.
 - `OnDamaged` is `protected override` on `Player` — fine for Harmony, just needs `[HarmonyPatch(typeof(Player), "OnDamaged")]` with a string name (or publicized assembly + `nameof`).

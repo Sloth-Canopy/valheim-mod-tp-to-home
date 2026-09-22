@@ -36,7 +36,7 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 |---|---|---|---|
 | `IsTeleportable` | 2002 | `public bool IsTeleportable(bool allowAllItems)` | Delegates to `Inventory.IsTeleportable`. Pass our `AllowWithMetal` config directly. |
 | `IsDrawingBow` | 1742 | `public override bool IsDrawingBow()` | Cancel condition. |
-| `IsSitting` | 1478 | `public override bool IsSitting()` | `GetCurrentAnimHash() == s_animatorTagSitting` — the **animator** is in the sit state. Vanilla's own "am I sitting" test (`Player.cs:1154`: `InEmote() && IsSitting()`). `InEmote()` alone is true while swimming because it only reads the ZDO flag. |
+| `IsSitting` | 1478 | `public override bool IsSitting()` | `GetCurrentAnimHash() == s_animatorTagSitting` — the **animator** is in the sit state. Vanilla's own "am I sitting" test (`Player.cs:1154`: `InEmote() && IsSitting()`). `InEmote()` alone is true while swimming because it only reads the ZDO flag. **Reads the *current* animator state only** (`GetCurrentAnimHash`, `Character.cs:3702`) — the sit-down transition isn't tagged, so this stays false for ~1–2 s after `StartEmote`. Latch it; don't gate on a fixed delay. |
 | `IsBlocking` | 1878 | `public override bool IsBlocking()` | Cancel condition. |
 
 ## Inventory (`Inventory.cs`)
