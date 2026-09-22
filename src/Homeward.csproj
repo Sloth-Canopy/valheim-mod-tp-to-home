@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>Homeward</AssemblyName>
+    <RootNamespace>Homeward</RootNamespace>
+    <Version>0.1.0</Version>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <!-- Machine-specific paths live in Homeward.local.props (gitignored). See Homeward.local.props.example. -->
+  <Import Project="Homeward.local.props" Condition="Exists('Homeward.local.props')" />
+  <PropertyGroup>
+    <ValheimManaged Condition="'$(ValheimManaged)' == ''">/mnt/c/Program Files (x86)/Steam/steamapps/common/Valheim/valheim_Data/Managed</ValheimManaged>
+    <BepInExCore>$(R2Profile)/BepInEx/core</BepInExCore>
+    <DeployDir>$(R2Profile)/BepInEx/plugins/Homeward</DeployDir>
+    <PackageDir>$(MSBuildThisFileDirectory)../package</PackageDir>
+  </PropertyGroup>
+  <Target Name="RequireLocalProps" BeforeTargets="ResolveAssemblyReferences" Condition="'$(R2Profile)' == ''">
+    <Error Text="R2Profile is not set. Copy src/Homeward.local.props.example to src/Homeward.local.props and fill in your r2modman profile path." />
+  </Target>
+
+  <!-- Game + loader assemblies. Private=false so they never get copied next to our DLL. -->
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCore)/BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExCore)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_valheim">
+      <HintPath>$(ValheimManaged)/assembly_valheim.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_utils">
+      <HintPath>$(ValheimManaged)/assembly_utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ValheimManaged)/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ValheimManaged)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(ValheimManaged)/UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- After build: drop the DLL into the running r2modman profile and the Thunderstore package folder. -->
+  <Target Name="DeployToProfile" AfterTargets="Build">
+    <MakeDir Directories="$(DeployDir)" />
+    <Copy SourceFiles="$(OutDir)$(AssemblyName).dll" DestinationFolder="$(DeployDir)" />
+    <Copy SourceFiles="$(OutDir)$(AssemblyName).dll" DestinationFolder="$(PackageDir)" />
+    <Message Importance="high" Text="Deployed $(AssemblyName).dll -> $(DeployDir)" />
+  </Target>
+
+</Project>

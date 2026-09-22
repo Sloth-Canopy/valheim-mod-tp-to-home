@@ -1,0 +1,15 @@
+# decompiled game code — regenerate with the command in docs/dev-setup.md
+decompiled/
+
+# .NET build output
+bin/
+obj/
+*.user
+.vs/
+.idea/
+
+# local paths / secrets
+*.local.props
+
+# build artifact dropped into the Thunderstore package folder by the csproj
+package/*.dll
