@@ -201,7 +201,7 @@ namespace Homeward
             main.startSize = new ParticleSystem.MinMaxCurve(0.05f, 0.12f);
             main.startColor = color;
             main.maxParticles = 300;
-            main.gravityModifier = 0f;
+            main.gravityModifier = -0.06f; // gentle upward drift even before velocity kicks in
 
             ParticleSystem.EmissionModule emission = _motes.emission;
             emission.rateOverTime = 45f;
@@ -212,10 +212,14 @@ namespace Homeward
             shape.radiusThickness = 0.2f;   // emit near the rim
             shape.rotation = new Vector3(90f, 0f, 0f); // circle in the XZ (ground) plane
 
+            // Unity requires x/y/z here to share one MinMaxCurve mode; mixing a
+            // constant x/z with a two-constant y makes the module silently no-op.
             ParticleSystem.VelocityOverLifetimeModule vel = _motes.velocityOverLifetime;
             vel.enabled = true;
             vel.space = ParticleSystemSimulationSpace.World;
+            vel.x = new ParticleSystem.MinMaxCurve(0f, 0f);
             vel.y = new ParticleSystem.MinMaxCurve(0.5f, 0.9f);
+            vel.z = new ParticleSystem.MinMaxCurve(0f, 0f);
 
             ParticleSystem.ColorOverLifetimeModule col = _motes.colorOverLifetime;
             col.enabled = true;

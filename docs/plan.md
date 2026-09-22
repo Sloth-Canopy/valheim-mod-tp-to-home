@@ -60,6 +60,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [ ] Publish
 
 ## Known gotchas (collected as we go)
+- `ParticleSystem.VelocityOverLifetimeModule` (and the other Vector3-curve modules): x, y and z must use the **same `MinMaxCurve` mode**. Setting only `y` to a two-constant range leaves x/z as constants and the whole module silently does nothing — no error in `LogOutput.log`.
 - `Player.StartEmote("sit")` returns `true` while swimming / mid-air and `InEmote()` stays true, but the animator never sits. Check `IsSitting()` (animator tag) for the truth — that's what vanilla does. But it reads the *current* state, and the sit-down transition state isn't tagged, so it lags `StartEmote` by a second or two. Latch it rather than using a fixed grace.
 - `TeleportTo` has a built-in `m_teleportCooldown < 2f` guard — it silently returns `false` within 2 s of a previous teleport.
 - `TeleportTo` returning `true` means *started*, not *arrived*. Actual movement happens over later frames in `UpdateTeleport`.
