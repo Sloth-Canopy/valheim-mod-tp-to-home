@@ -14,3 +14,6 @@ obj/
 
 # build artifact dropped into the Thunderstore package folder by the csproj
 package/*.dll
+
+# packaged zips
+dist/

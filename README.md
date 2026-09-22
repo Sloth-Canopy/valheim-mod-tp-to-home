@@ -22,7 +22,9 @@ docs/
 package/             Thunderstore package template (manifest, README, changelog; icon TODO)
 decompiled/          ilspycmd output of assembly_valheim.dll (gitignored, regenerable)
 decompiled-guiutils/ same for assembly_guiutils.dll (GuiBar)
-tools/               gen_textures.py — regenerates src/Resources/*.png
+tools/               gen_textures.py — regenerates src/Resources/*.png + package/icon.png
+                     pack.py — builds dist/Homeward-<version>.zip for r2modman / Thunderstore
+dist/                packaged zips (gitignored)
 src/                 the mod; `dotnet build -c Release` deploys
   HomewardPlugin.cs  BepInEx entry point, config, hotkey
   Channel.cs         the sit-still channel + cancel rules + departure

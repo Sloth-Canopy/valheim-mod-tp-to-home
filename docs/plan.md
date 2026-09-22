@@ -56,7 +56,8 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Remaining-cooldown text on early press (landed in Phase 1)
 
 ## Phase 4 — Ship (see `docs/publishing.md`)
-- [ ] `package/` filled in: `manifest.json`, `README.md`, `CHANGELOG.md`, 256×256 `icon.png`
+- [x] `package/` filled in: `manifest.json`, `README.md`, `CHANGELOG.md`, 256×256 `icon.png` (procedural, `tools/gen_textures.py`, 2026-09-22)
+- [x] `tools/pack.py` builds `dist/Homeward-<v>.zip`
 - [ ] Local-import test in r2modman passes (Stage 1 in publishing.md)
 - [ ] Profile-export test with friends (Stage 2)
 - [ ] Test on a dedicated server with a friend (multiplayer haunting check)

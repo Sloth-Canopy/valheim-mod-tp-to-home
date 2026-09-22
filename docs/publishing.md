@@ -78,7 +78,7 @@ Do this before every upload; it catches "forgot to bump the version" and
 doesn't load).
 
 1. Build → `package/Homeward.dll` present
-2. `cd package && zip -r ../Homeward-1.0.0.zip .` (from *inside* the folder so files are at the zip root)
+2. `python3 tools/pack.py` → `dist/Homeward-<version>.zip` (files at the zip root; no `zip` binary needed)
 3. r2modman → `canpoy-mods` profile → **Settings** → **Import local mod** → pick the zip
 4. Launch modded, check `BepInEx/LogOutput.log` for `[Info   :   BepInEx] Loading [Homeward 1.0.0]`
 5. To update: bump `version_number`, rebuild, re-import. r2modman keys local mods on name+version.
@@ -87,11 +87,21 @@ During development you *don't* need this loop — the post-build copy into
 `BepInEx/plugins/Homeward/` is faster. Local import is for testing the *package*,
 not the code.
 
+**Gotcha:** the post-build copy puts the DLL in the profile *behind r2modman's
+back*. r2modman doesn't list it, and **profile export won't include it**. To
+share with friends you must import the zip as a local mod first (Stage 1), then
+export. After importing, r2modman manages `BepInEx/plugins/canpoy-Homeward/` (or
+similar) — the hand-copied `plugins/Homeward/` folder should be removed so two
+copies don't load.
+
 ## Stage 2 — Give it to friends without publishing
 
 r2modman → profile → **Export profile as a code** (or as a file). Friends do
 **Import profile** → code. Locally-imported mods are bundled into the export,
-so this works for unpublished mods. Good for a "does it work on the server with
+so this works for unpublished mods. (Hand-copied DLLs are not — see the gotcha
+above.) Simplest alternative: just send them the zip and have them do
+**Import local mod** themselves. The dedicated server does **not** need the mod;
+it only forwards the routed RPCs. Good for a "does it work on the server with
 four people" test before going public.
 
 ## Stage 3 — Publish to Thunderstore

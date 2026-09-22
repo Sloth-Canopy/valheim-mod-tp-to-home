@@ -98,3 +98,22 @@ OUT.mkdir(parents=True, exist_ok=True)
 write_png(OUT / "rune_ring.png", 512, 512, gen_ring())
 write_png(OUT / "mote.png", 32, 32, gen_mote())
 print("wrote", OUT / "rune_ring.png", OUT / "mote.png")
+
+# --- Thunderstore icon: the ring on a dark background, tinted like the in-game default.
+def gen_icon(size=256):
+    ring = gen_ring(size)
+    rows = []
+    for y in range(size):
+        row = []
+        for x in range(size):
+            a = ring[y][x * 4 + 3] / 255
+            # dark blue-black background with a faint vignette glow toward the center
+            d = math.hypot(x - size / 2, y - size / 2) / (size / 2)
+            bg = (14 + int(18 * smooth(1 - d)), 18 + int(24 * smooth(1 - d)), 30 + int(34 * smooth(1 - d)))
+            tint = (0x7F, 0xD7, 0xFF)
+            row += [int(bg[i] * (1 - a) + tint[i] * a) for i in range(3)] + [255]
+        rows.append(row)
+    return rows
+
+write_png(OUT.parent.parent / "package" / "icon.png", 256, 256, gen_icon())
+print("wrote", OUT.parent.parent / "package" / "icon.png")
