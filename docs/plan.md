@@ -26,7 +26,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Message feedback via `player.Message(MessageHud.MessageType.Center, ...)`
 - [x] Test in single player (verified 2026-09-21 — note: bed must be *claimed*, which needs a roof + ≥80% cover; an unclaimed bed correctly yields "You have no home.")
 
-## Phase 2 — The channel ✅ code complete (2026-09-21)
+## Phase 2 — The channel ✅ (verified 2026-09-22)
 - [x] `CastSeconds` config (default 8, 0 = instant), `CancelOnDamage`, `ShowPortalAnimation`
 - [x] Channel uses the game's **sit emote** (`StartEmote("sit")`) — player visibly sits on the floor
 - [x] Cancel on: moved (emote dropped or position drifted > 0.5), attack / bow / block, item use (`InMinorAction`), build mode, death, damage (Harmony postfix on `Player.OnDamaged`)
@@ -34,7 +34,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Native action bar shows "Heading home... Ns" (postfix on `Hud.UpdateActionProgress`)
 - [x] Portal swirl replaced with a plain fade to black (prefix on `Player.ShowTeleportAnimation`)
 - [x] Teleport fires only when the channel completes; cooldown still stamps on arrival
-- [ ] Test in single player: sit animation, bar counts down, each cancel reason fires, fade is plain black, arrival stamps cooldown
+- [x] Test in single player: sit animation, bar counts down, cancel reasons fire, fade is plain black, arrival stamps cooldown (verified 2026-09-22)
 - [x] Swimming exploit fixed (2026-09-22): channel now requires `IsOnGround && !IsSwimming && !IsRiding && !IsAttached` to start, and `InEmote() && IsSitting()` (the real animation) after a 1 s grace
 - [x] "Interrupted (not sitting)" false positive fixed (2026-09-22): `IsSitting()` is false during the sit-down transition, so the seated check now latches on first sight and only then enforces; 3 s ceiling if it never seats
 - [ ] Decide whether the emote grace (0.5 s) / seat timeout (3 s) need tuning on a laggy server

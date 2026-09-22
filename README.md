@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** Phase 2 (sit-to-channel, native progress bar, fade instead of portal swirl) built and deployed 2026-09-21 — awaiting in-game test.
+**Status:** Phase 2 verified in-game (2026-09-22). Next: Phase 3 polish or straight to Phase 4 ship.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
