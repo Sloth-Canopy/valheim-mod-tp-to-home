@@ -25,7 +25,7 @@ MMO-style recall for Valheim. Press a key, channel for a few seconds, wake up in
 | ChannelVfxColor | #7FD7FF | Tint of the ring and motes (HTML color) |
 | ChannelVfxRadius | 1.2 | Ring radius in meters |
 | ChannelSoundEnabled | true | Gentle drone-and-chimes loop while channeling |
-| ChannelSoundVolume | 0.5 | Sound volume (also scaled by the SFX slider) |
+| ChannelSoundVolume | 0.3 | Sound volume (also scaled by the SFX slider) |
 
 ## Install
 r2modman / Thunderstore Mod Manager. Needs BepInExPack_Valheim.

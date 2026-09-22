@@ -23,7 +23,7 @@ Settled choices. If you want to change one, change it here first and say why.
 | 16 | Channeling VFX | **Custom, built at runtime**: rune-ring quad + code-configured `ParticleSystem`, textures embedded in the DLL (revised 2026-09-22; v1 borrowed vanilla status-effect VFX and was rejected on looks) | No Unity Editor, no asset bundle — iteration is build → relaunch. Textures are generated procedurally by `tools/gen_textures.py`, so there's no art pipeline either. Local-only for now. If we ever want custom shaders or meshes, that's the asset-bundle route (decision pending). |
 
 | 17 | Channeling sound | **Synthesized at runtime** (drone + chimes into an `AudioClip` via `SetData`) | Same philosophy as the textures: no assets, no decoder, tunable by numbers. 3D-positioned on the ring, borrowed vanilla mixer group so the SFX slider applies. |
-| 18 | Target framework | **`netstandard2.1`**, not `net472` | Unity 6's Audio/ImageConversion modules are netstandard 2.1; net472 can't reference them. BepInEx/Harmony (net35) still work through facades. **Unverified until the 0.5.0 build is seen loading in-game** — if it fails to load, the fallback is net472 + reflection for the Unity 6 modules. |
+| 18 | Target framework | **`netstandard2.1`**, not `net472` | Unity 6's Audio/ImageConversion modules are netstandard 2.1; net472 can't reference them. BepInEx/Harmony (net35) still work through facades. Verified 2026-09-22: 0.5.0 loads and runs in-game. |
 
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.

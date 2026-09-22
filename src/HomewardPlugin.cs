@@ -56,7 +56,7 @@ namespace Homeward
                 new ConfigDescription("Radius of the ring in meters.", new AcceptableValueRange<float>(0.3f, 5f)));
             ChannelSoundEnabled = Config.Bind("Visuals", "ChannelSoundEnabled", true,
                 "Play a gentle drone-and-chimes loop while channeling.");
-            ChannelSoundVolume = Config.Bind("Visuals", "ChannelSoundVolume", 0.5f,
+            ChannelSoundVolume = Config.Bind("Visuals", "ChannelSoundVolume", 0.3f,
                 new ConfigDescription("Volume of the channeling sound (also scaled by the game's SFX slider).", new AcceptableValueRange<float>(0f, 1f)));
 
             _harmony = new Harmony(PluginGuid);
