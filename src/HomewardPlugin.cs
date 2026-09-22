@@ -11,33 +11,36 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.1.0";
-
-        // Key in Player.m_customData. Value is unix seconds (UTC) of the last completed homeward.
-        internal const string LastUsedKey = "homeward.lastUsed";
+        public const string PluginVersion = "0.2.0";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
         internal static ConfigEntry<int> CooldownMinutes;
+        internal static ConfigEntry<float> CastSeconds;
         internal static ConfigEntry<bool> AllowWithMetal;
+        internal static ConfigEntry<bool> CancelOnDamage;
+        internal static ConfigEntry<bool> ShowPortalAnimation;
 
         private Harmony _harmony;
-
-        // Set when we've kicked off a teleport and are waiting for the player to arrive.
-        // The cooldown is only stamped on arrival (decisions.md #7).
-        private bool _awaitingArrival;
 
         private void Awake()
         {
             Log = Logger;
 
             Hotkey = Config.Bind("General", "Hotkey", new KeyboardShortcut(KeyCode.H),
-                "Key that starts the journey home.");
+                "Key that starts the journey home. Press again while channeling to cancel.");
             CooldownMinutes = Config.Bind("General", "CooldownMinutes", 60,
                 new ConfigDescription("Real-time minutes between uses. Survives logout.",
                     new AcceptableValueRange<int>(0, 24 * 60)));
+            CastSeconds = Config.Bind("General", "CastSeconds", 8f,
+                new ConfigDescription("Seconds you must sit still before the teleport fires. 0 = instant.",
+                    new AcceptableValueRange<float>(0f, 60f)));
             AllowWithMetal = Config.Bind("General", "AllowWithMetal", false,
                 "Ignore the portal metal restriction. Normal portal rules apply when false.");
+            CancelOnDamage = Config.Bind("General", "CancelOnDamage", true,
+                "Taking damage while channeling cancels the teleport.");
+            ShowPortalAnimation = Config.Bind("General", "ShowPortalAnimation", false,
+                "Show the vanilla portal swirl during the teleport. When false you get a plain fade to black.");
 
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll();
@@ -54,23 +57,27 @@ namespace Homeward
             Player player = Player.m_localPlayer;
             if (player == null)
             {
-                _awaitingArrival = false;
+                Channel.Reset();
+                Flight.Reset();
                 return;
             }
 
-            if (_awaitingArrival && !player.IsTeleporting())
-            {
-                _awaitingArrival = false;
-                StampCooldown(player);
-                Log.LogInfo("Arrived home, cooldown started");
-            }
+            Flight.Update(player);
+            Channel.Update(player);
 
             if (IsTyping() || !Hotkey.Value.IsDown())
             {
                 return;
             }
 
-            TryHomeward(player);
+            if (Channel.Active)
+            {
+                Channel.Cancel(player, "Cancelled.");
+            }
+            else
+            {
+                Channel.TryStart(player);
+            }
         }
 
         private static bool IsTyping()
@@ -79,73 +86,6 @@ namespace Homeward
                 || Console.IsVisible()
                 || TextInput.IsVisible()
                 || (Chat.instance != null && Chat.instance.HasFocus());
-        }
-
-        private void TryHomeward(Player player)
-        {
-            if (player.IsTeleporting())
-            {
-                return;
-            }
-
-            PlayerProfile profile = Game.instance.GetPlayerProfile();
-            if (!profile.HaveCustomSpawnPoint())
-            {
-                player.Message(MessageHud.MessageType.Center, "You have no home.");
-                return;
-            }
-
-            long remaining = CooldownRemainingSeconds(player);
-            if (remaining > 0)
-            {
-                player.Message(MessageHud.MessageType.Center, $"Homeward ready in {FormatDuration(remaining)}");
-                return;
-            }
-
-            if (!player.IsTeleportable(AllowWithMetal.Value))
-            {
-                player.Message(MessageHud.MessageType.Center, "Cannot travel home while carrying metal.");
-                return;
-            }
-
-            Vector3 target = profile.GetCustomSpawnPoint();
-            if (!player.TeleportTo(target, player.transform.rotation, distantTeleport: true))
-            {
-                // Not owner, already teleporting, or inside the game's 2 s teleport guard.
-                Log.LogWarning("TeleportTo refused");
-                return;
-            }
-
-            _awaitingArrival = true;
-            player.Message(MessageHud.MessageType.Center, "Heading home...");
-            Log.LogInfo($"Heading home to {target}");
-        }
-
-        private static long NowSeconds()
-        {
-            return System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        }
-
-        private static void StampCooldown(Player player)
-        {
-            player.m_customData[LastUsedKey] = NowSeconds().ToString();
-        }
-
-        private static long CooldownRemainingSeconds(Player player)
-        {
-            if (!player.m_customData.TryGetValue(LastUsedKey, out string raw) || !long.TryParse(raw, out long lastUsed))
-            {
-                return 0;
-            }
-            long readyAt = lastUsed + CooldownMinutes.Value * 60L;
-            return System.Math.Max(0, readyAt - NowSeconds());
-        }
-
-        private static string FormatDuration(long seconds)
-        {
-            long m = seconds / 60;
-            long s = seconds % 60;
-            return m > 0 ? $"{m}m {s:00}s" : $"{s}s";
         }
     }
 }

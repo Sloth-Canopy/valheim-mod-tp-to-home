@@ -42,6 +42,12 @@ ilspycmd -p -o decompiled \
 Produces ~630 `.cs` files. It's gitignored. Do this after every Valheim update,
 then re-verify `docs/game-api.md`.
 
+`GuiBar` and other UI helpers live in a second assembly:
+```bash
+ilspycmd -p -o decompiled-guiutils \
+  "/mnt/c/Program Files (x86)/Steam/steamapps/common/Valheim/valheim_Data/Managed/assembly_guiutils.dll"
+```
+
 Handy greps:
 ```bash
 grep -nE 'public .* TeleportTo\(' decompiled/Player.cs

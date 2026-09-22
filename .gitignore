@@ -1,5 +1,6 @@
 # decompiled game code — regenerate with the command in docs/dev-setup.md
 decompiled/
+decompiled-guiutils/
 
 # .NET build output
 bin/

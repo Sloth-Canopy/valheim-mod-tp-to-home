@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** Phase 1 complete and verified in-game (2026-09-21). Next: Phase 2 (channel + cancel-on-damage).
+**Status:** Phase 2 (sit-to-channel, native progress bar, fade instead of portal swirl) built and deployed 2026-09-21 — awaiting in-game test.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -21,7 +21,13 @@ docs/
   publishing.md      Thunderstore package format, local testing, upload, tcli
 package/             Thunderstore package template (manifest, README, changelog; icon TODO)
 decompiled/          ilspycmd output of assembly_valheim.dll (gitignored, regenerable)
-src/                 the mod — Homeward.csproj + HomewardPlugin.cs; `dotnet build -c Release` deploys
+decompiled-guiutils/ same for assembly_guiutils.dll (GuiBar)
+src/                 the mod; `dotnet build -c Release` deploys
+  HomewardPlugin.cs  BepInEx entry point, config, hotkey
+  Channel.cs         the sit-still channel + cancel rules + departure
+  Flight.cs          in-flight tracking, stamps cooldown on arrival
+  Cooldown.cs        real-time cooldown in Player.m_customData
+  Patches.cs         Harmony patches (damage, portal swirl, action bar)
 ```
 
 ## Quick facts

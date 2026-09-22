@@ -18,6 +18,14 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 | `UpdateTeleport` | 5916 | `private void UpdateTeleport(float dt)` | Where the actual move happens. With `distantTeleport: true`: moves you after 2 s, waits for `IsAreaReady` + 8 s, then `FindFloor`; if no floor by 15 s it snaps you to `GetSolidHeight + 0.5`. **Never bounces you back** on distant teleports, so `IsTeleporting()` → false is a reliable arrival signal. |
 | `InAttack` | 6991 | `public override bool InAttack()` | Channel-cancel condition. |
 | `OnDamaged` | 6793 | `protected override void OnDamaged(HitData hit)` | Harmony postfix target for "took damage → cancel channel". Protected — patch by string name. |
+| `StartEmote` | 6172 | `public bool StartEmote(string emote, bool oneshot = true)` | Lowercase name, e.g. `"sit"` (`Emote.cs:12` does `emote.ToString().ToLower()`). Returns `false` if `!CanMove() \|\| InAttack() \|\| IsDrawingBow() \|\| IsAttached()`. Writes to the ZDO; takes effect in `UpdateEmote` a frame later. |
+| `StopEmote` | 6188 | `protected override void StopEmote()` | Protected — we call it via `AccessTools.Method(typeof(Player), "StopEmote")`. |
+| `UpdateEmote` | 6198 | `private void UpdateEmote()` | **Stops the emote when `m_moveDir != Vector3.zero`** — i.e. any movement input. That's our free "moved" detector. |
+| `InEmote` | 6231 | `public override bool InEmote()` | True while `m_emoteState` is set (looping emotes like sit). |
+| `ShowTeleportAnimation` | 5973 | `public bool ShowTeleportAnimation()` | Returns `m_distantTeleport` while teleporting. `Hud.UpdateBlackScreen` shows the portal swirl only when this is true; a plain fade otherwise. We prefix-patch it to `false`. |
+| `InPlaceMode` | 3675 | `public override bool InPlaceMode()` | Build mode. Cancel condition. |
+| `InMinorAction` | 7120 | `public override bool InMinorAction()` | Eating / item-use animations. Cancel condition. |
+| `IsDead` | 5829 | `public override bool IsDead()` | |
 | `Message` | 5388 | `public override void Message(MessageHud.MessageType type, string msg, int amount = 0, Sprite icon = null, bool log = false)` | Local-player-only wrapper around `MessageHud`. Use this instead of `MessageHud.instance` directly. |
 
 ## Humanoid (`Humanoid.cs`) — Player inherits this
@@ -25,6 +33,8 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 | Member | Line | Signature | Notes |
 |---|---|---|---|
 | `IsTeleportable` | 2002 | `public bool IsTeleportable(bool allowAllItems)` | Delegates to `Inventory.IsTeleportable`. Pass our `AllowWithMetal` config directly. |
+| `IsDrawingBow` | 1742 | `public override bool IsDrawingBow()` | Cancel condition. |
+| `IsBlocking` | 1878 | `public override bool IsBlocking()` | Cancel condition. |
 
 ## Inventory (`Inventory.cs`)
 
@@ -55,6 +65,17 @@ Get the profile via `Game.instance.GetPlayerProfile()`.
 | `MessageType` | 8 | `enum { TopLeft = 1, Center }` | `Center` = big centered text (like "Rested"). |
 | `ShowMessage` | 156 | `public void ShowMessage(MessageType type, string text, int amount = 0, Sprite icon = null, bool showDespiteHiddenHUD = false, bool log = true)` | Via `MessageHud.instance`. |
 
+## Hud (`Hud.cs`) — the native action bar we borrow for the channel
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `instance` | 368 | `public static Hud instance` | |
+| `UpdateActionProgress` | 803 | `private void UpdateActionProgress(Player player)` | Called every frame from `Hud.Update`. Hides `m_actionBarRoot` whenever the player's action queue is empty, so we **postfix** it and re-show the bar while channeling. |
+| `m_actionBarRoot` | 144 | `public GameObject m_actionBarRoot` | |
+| `m_actionProgress` | 146 | `public GuiBar m_actionProgress` | `SetValue(float)` takes a 0–1 fraction (`GuiBar.m_maxValue` defaults to 1). `GuiBar` lives in `assembly_guiutils.dll` → `decompiled-guiutils/GuiBar.cs:57`. |
+| `m_actionName` | 148 | `public TMP_Text m_actionName` | Needs `Unity.TextMeshPro.dll` + `UnityEngine.UI.dll` references to compile. |
+| `UpdateBlackScreen` | 571 | `private void UpdateBlackScreen(Player player, float dt)` | For reference: shows the loading screen while `IsTeleporting()`; picks portal swirl vs. plain black via `ShowTeleportAnimation()`. |
+
 ## Input guards — don't fire the hotkey while typing
 
 | Class | Line | Signature |
@@ -83,7 +104,6 @@ On respawn, vanilla looks for a `Bed` within 5 m of the custom spawn point
 falls back to the start temple. We can't replicate this pre-teleport because the
 target zone isn't loaded yet — see decisions.md #6.
 
-## Not yet verified (Phase 2/3 — grep before using)
-- `ZNetScene.instance.GetPrefab(string)` and the `portal_wood` prefab's teleport effects
+## Not yet verified (Phase 3 — grep before using)
 - `StatusEffect` / Jötunn `CustomStatusEffect` API
 - ServerSync API

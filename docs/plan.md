@@ -26,12 +26,17 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Message feedback via `player.Message(MessageHud.MessageType.Center, ...)`
 - [x] Test in single player (verified 2026-09-21 — note: bed must be *claimed*, which needs a roof + ≥80% cover; an unclaimed bed correctly yields "You have no home.")
 
-## Phase 2 — The channel
-- [ ] Coroutine on hotkey: "Heading home..." countdown, configurable `CastSeconds` (default 8)
-- [ ] Cancel on: moved > tolerance, `InAttack()`, took damage
-- [ ] Damage detection: Harmony postfix on `Player.OnDamaged(HitData)` → sets a flag
-- [ ] Teleport fires only when the channel completes
-- [ ] Optional: reuse portal VFX/SFX from the `portal_wood` prefab (`ZNetScene.instance.GetPrefab`)
+## Phase 2 — The channel ✅ code complete (2026-09-21)
+- [x] `CastSeconds` config (default 8, 0 = instant), `CancelOnDamage`, `ShowPortalAnimation`
+- [x] Channel uses the game's **sit emote** (`StartEmote("sit")`) — player visibly sits on the floor
+- [x] Cancel on: moved (emote dropped or position drifted > 0.5), attack / bow / block, item use (`InMinorAction`), build mode, death, damage (Harmony postfix on `Player.OnDamaged`)
+- [x] Hotkey again while channeling cancels
+- [x] Native action bar shows "Heading home... Ns" (postfix on `Hud.UpdateActionProgress`)
+- [x] Portal swirl replaced with a plain fade to black (prefix on `Player.ShowTeleportAnimation`)
+- [x] Teleport fires only when the channel completes; cooldown still stamps on arrival
+- [ ] Test in single player: sit animation, bar counts down, each cancel reason fires, fade is plain black, arrival stamps cooldown
+- [ ] Decide whether the emote grace window (0.5 s) needs tuning on a laggy server
+- ~~Reuse portal VFX/SFX~~ — dropped; the fade-to-black is the effect now
 
 ## Phase 3 — Polish
 - [ ] Jötunn `CustomStatusEffect` for the cooldown icon in the buff bar

@@ -6,7 +6,7 @@ Settled choices. If you want to change one, change it here first and say why.
 |---|---|---|---|
 | 1 | Cooldown clock | **Real time (UTC unix seconds)**, not in-game time | "60 min" should mean 60 min. Logging out must not reset it. In-game time only advances while the world runs. |
 | 2 | Cooldown storage | `Player.m_customData["homeward.lastUsed"]` as a `long` string | Sanctioned mod-data bag, persists in the character save. Per-character, across worlds. **Never** store as `DateTime.ToString()` — culture formatting bug waiting to happen. |
-| 3 | Cast time | **~8 s channel**, cancel on damage / attack / movement | It's the hearthstone feel. Instant is boring and a combat-escape cheese. Cast time configurable. |
+| 3 | Cast time | **8 s channel as the sit emote**, cancel on damage / attack / movement / item use / build mode | It's the recall feel. Instant is boring and a combat-escape cheese. The sit emote gives a visible "channeling" pose for free and the game already cancels it on movement input. Configurable; 0 = instant. |
 | 4 | Metal / ore in inventory | **Blocked by default**, config `AllowWithMetal` | Portals block it; a recall that ignores it makes portals pointless. The game's own `IsTeleportable(bool allowAllItems)` already takes this as a parameter — pass the config straight in. |
 | 5 | No bed claimed | **Refuse** with a message | Do not fall back to the start temple. |
 | 6 | Bed destroyed | **Teleport to the stale spawn point anyway** | Profile still holds it. Vanilla respawn *does* check for a bed within 5 m and clears the point if missing, but only once the zone is loaded — we can't check pre-teleport. Acceptable: you arrive at a crater. Could add a post-arrival bed check in Phase 3 if it bugs us. |
@@ -16,6 +16,9 @@ Settled choices. If you want to change one, change it here first and say why.
 | 10 | Default hotkey | `H` via BepInEx `KeyboardShortcut` config | Guarded by menu/console/chat/text-input checks so it doesn't fire while typing. |
 | 11 | Spawn point scope | Per-world (game already does this: `GetWorldData(worldUID).m_spawnPoint`) | Nothing to decide, just noting it — your bed in world A is not your bed in world B. |
 | 12 | Name | **Homeward** (was "Hearth", renamed 2026-09-21) | Plain, searchable, says what it does. Avoids "Hearthstone" (Blizzard trademark) entirely, and avoids colliding with Valheim's own "Hearth" build piece on Thunderstore search. Runners-up: Heimleid, Hamfare. |
+
+| 14 | Loading screen | **Plain fade to black**, no portal swirl (config `ShowPortalAnimation` to restore) | A seamless teleport isn't possible — the destination zone has to stream in and you'd watch terrain pop. The fade reads as "close your eyes, wake up at home", which fits the bed better than the portal effect does. |
+| 15 | Channel UI | **Borrow the game's action bar** (`Hud.m_actionBarRoot`) instead of custom UI | Native look, zero art, no Jötunn dependency. Cost: a Harmony postfix on a private Hud method, re-verified each game update. |
 
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.
