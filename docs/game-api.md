@@ -107,6 +107,9 @@ Get the profile via `Game.instance.GetPlayerProfile()`.
 | `GetTimeString` | ~218 | `public static string GetTimeString(float time, bool sufix = false, bool alwaysShowMinutes = false)` | `"m:ss"` / `"s"` formatting the game uses. |
 | `Clone` | — | `public StatusEffect Clone()` | `MemberwiseClone` — subclass preserved. |
 
+| `m_startEffects` | 55 | `public EffectList m_startEffects` | Spawned in `Setup` → `TriggerStartEffects` (116): `Create(center, rot, parent: character.transform, ...)` so the VFX **follows the character**. Destroyed by `Stop()` → `RemoveStartEffects`. This is how the channeling aura works: a hidden effect that carries a borrowed `m_startEffects`. |
+| `m_stopEffects` | 57 | `public EffectList m_stopEffects` | One-shot at `Stop()`. Unused by us so far. |
+
 Status effects are **not persisted** in the player save (no `Save`/`Load` in `SEMan.cs`, nothing in `Player.cs`). We re-add ours from `m_customData` whenever it's missing.
 
 ## SEMan (`SEMan.cs`) — via `Character.GetSEMan()` (`Character.cs:4356`)
@@ -116,6 +119,22 @@ Status effects are **not persisted** in the player save (no `Save`/`Load` in `SE
 | `AddStatusEffect` | 184 | `public StatusEffect AddStatusEffect(StatusEffect statusEffect, bool resetTime = false, ...)` | Takes a raw instance — clones it, calls `Setup`. **No ObjectDB registration needed**, hence no Jötunn. Returns null if already present. |
 | `HaveStatusEffect` | 293 | `public bool HaveStatusEffect(int nameHash)` | |
 | `RemoveStatusEffect` | 219 | `public bool RemoveStatusEffect(int nameHash, bool quiet = false)` | |
+
+## ObjectDB (`ObjectDB.cs`) — vanilla status-effect lookup
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `instance` | 33 | `public static ObjectDB instance` | |
+| `m_StatusEffects` | 9 | `public List<StatusEffect> m_StatusEffects` | Iterate to find by type (e.g. `is SE_Shield`). |
+| `GetStatusEffect` | 70 | `public StatusEffect GetStatusEffect(int nameHash)` | `"Spirit".GetStableHashCode()` etc. Names referenced in code: Burning, CampFire, Cold, Encumbered, Freezing, Frost, Lightning, Poison, Rested, Resting, Shelter, Smoked, SoftDeath, Spirit, Tared, Wet. |
+
+## EffectList (`EffectList.cs`)
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `Create` | 37 | `public GameObject[] Create(Vector3 basePos, Quaternion baseRot, Transform baseParent = null, float scale = 1f, int variant = -1, ZDOID ... = default)` | |
+| `HasEffects` | 130 | `public bool HasEffects()` | |
+| `m_effectPrefabs` | 35 | `public EffectData[] m_effectPrefabs` | `EffectData.m_prefab` (12), `m_attach` (18). |
 
 ## ZNetScene / Piece — for the bed icon
 

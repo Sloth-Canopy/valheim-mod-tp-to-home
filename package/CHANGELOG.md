@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+- Channeling VFX: a vanilla status-effect visual (default Spirit) surrounds you while sitting; `ChannelVfx` config
+
 ## 0.3.0
 - Cooldown shown as a buff-bar icon (bed) with a live countdown; "Homeward is ready." when it expires
 

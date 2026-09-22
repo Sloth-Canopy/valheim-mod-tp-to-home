@@ -43,6 +43,8 @@ before starting the next — the instant-teleport version will tell you whether
 ## Phase 3 — Polish
 - [x] Cooldown icon in the buff bar (2026-09-22) — a `StatusEffect` subclass added straight via `SEMan.AddStatusEffect(instance)`; **no Jötunn needed**. Bed icon borrowed from the `bed` prefab, grey cooldown overlay, live `m:ss`, "Homeward is ready." when it expires
 - [ ] Test: icon appears on arrival, counts down, survives logout/login and death, disappears + message at 0
+- [x] Channeling VFX (2026-09-22) — hidden `StatusEffect` carrying a borrowed vanilla `m_startEffects`; `ChannelVfx` config (default Spirit)
+- [ ] Test: VFX appears on sit, follows the player, disappears on cancel/complete; try Spirit / Lightning / Frost / Shield and pick a default
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
 - [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
 - [x] Remaining-cooldown text on early press (landed in Phase 1)

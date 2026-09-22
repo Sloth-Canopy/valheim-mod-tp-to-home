@@ -11,7 +11,7 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.3.0";
+        public const string PluginVersion = "0.4.0";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
@@ -20,6 +20,7 @@ namespace Homeward
         internal static ConfigEntry<bool> AllowWithMetal;
         internal static ConfigEntry<bool> CancelOnDamage;
         internal static ConfigEntry<bool> ShowPortalAnimation;
+        internal static ConfigEntry<string> ChannelVfx;
 
         private Harmony _harmony;
         private bool _wasOnCooldown;
@@ -42,6 +43,11 @@ namespace Homeward
                 "Taking damage while channeling cancels the teleport.");
             ShowPortalAnimation = Config.Bind("General", "ShowPortalAnimation", false,
                 "Show the vanilla portal swirl during the teleport. When false you get a plain fade to black.");
+
+            ChannelVfx = Config.Bind("General", "ChannelVfx", "Spirit",
+                "Vanilla status-effect visual shown on you while channeling. " +
+                "Spirit = blue ghost flames, Lightning = sparks, Frost = ice, Burning = fire, Poison = green haze, " +
+                "Shield = protection bubble, None = nothing. Any vanilla status effect name works.");
 
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll();

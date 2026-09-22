@@ -100,6 +100,7 @@ namespace Homeward
             _seated = false;
             _startTime = Time.time;
             _startPos = player.transform.position;
+            ChannelEffect.Apply(player);
             HomewardPlugin.Log.LogInfo("Channel started");
         }
 
@@ -120,6 +121,7 @@ namespace Homeward
             if (Remaining <= 0f)
             {
                 Active = false;
+                ChannelEffect.Remove(player);
                 StopEmote(player);
                 Depart(player);
             }
@@ -128,6 +130,7 @@ namespace Homeward
         public static void Cancel(Player player, string message)
         {
             Active = false;
+            ChannelEffect.Remove(player);
             StopEmote(player);
             Say(player, message);
             HomewardPlugin.Log.LogInfo($"Channel cancelled: {message}");

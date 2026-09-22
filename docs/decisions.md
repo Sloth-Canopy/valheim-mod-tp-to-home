@@ -20,6 +20,8 @@ Settled choices. If you want to change one, change it here first and say why.
 | 14 | Loading screen | **Plain fade to black**, no portal swirl (config `ShowPortalAnimation` to restore) | A seamless teleport isn't possible — the destination zone has to stream in and you'd watch terrain pop. The fade reads as "close your eyes, wake up at home", which fits the bed better than the portal effect does. |
 | 15 | Channel UI | **Borrow the game's action bar** (`Hud.m_actionBarRoot`) instead of custom UI | Native look, zero art, no Jötunn dependency. Cost: a Harmony postfix on a private Hud method, re-verified each game update. |
 
+| 16 | Channeling VFX | **Borrow a vanilla status effect's `m_startEffects`** via a hidden status effect; `ChannelVfx` config, default `Spirit` | Zero art, zero asset bundles, follows the player, cleaned up by the game's own `Stop()`. Elemental DoT visuals (Spirit/Lightning/Frost) already look like "something magical is happening to this viking". Default is a guess until seen in-game. |
+
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.
 - Cancel-on-movement tolerance: how far is "moved"? Start with 0.1 units and tune.

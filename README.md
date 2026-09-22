@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** 0.3.0 — cooldown buff icon built and deployed 2026-09-22, awaiting in-game test.
+**Status:** 0.4.0 — channeling VFX (2026-09-22), awaiting in-game test alongside the 0.3.0 cooldown icon.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -29,6 +29,7 @@ src/                 the mod; `dotnet build -c Release` deploys
   Cooldown.cs        real-time cooldown in Player.m_customData
   Patches.cs         Harmony patches (damage, portal swirl, action bar)
   CooldownEffect.cs  buff-bar icon; a StatusEffect that mirrors the cooldown
+  ChannelEffect.cs   hidden StatusEffect that carries a borrowed vanilla VFX while channeling
 ```
 
 ## Quick facts
