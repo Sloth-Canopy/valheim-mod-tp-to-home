@@ -3,7 +3,9 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** Phase 0 complete. Empty plugin builds, deploys, and loads in-game. Next: Phase 1 (hotkey → teleport).
+**Status:** Phase 1 complete and verified in-game (2026-09-21). Next: Phase 2 (channel + cancel-on-damage).
+
+**Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
 
 ## Layout

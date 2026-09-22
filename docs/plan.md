@@ -16,7 +16,7 @@ before starting the next — the instant-teleport version will tell you whether
 ## Phase 1 — MVP: press key, go home
 - [x] BepInEx config: `Hotkey` (KeyboardShortcut, default H), `CooldownMinutes` (60), `AllowWithMetal` (false)
 - [x] `Update()`: bail if no local player / `Menu.IsVisible()` / `Console.IsVisible()` / `TextInput.IsVisible()` / `Chat.instance.HasFocus()`
-- [ ] On hotkey:
+- [x] On hotkey:
   - [x] `HaveCustomSpawnPoint()` else message "You have no home."
   - [x] cooldown check via `m_customData` else "Homeward ready in mm:ss"
   - [x] `IsTeleportable(AllowWithMetal)` else "Cannot travel home while carrying metal."
@@ -24,7 +24,7 @@ before starting the next — the instant-teleport version will tell you whether
   - [x] `TeleportTo(spawnPoint, player.transform.rotation, distantTeleport: true)`
 - [x] Stamp cooldown after arrival (see decisions #7)
 - [x] Message feedback via `player.Message(MessageHud.MessageType.Center, ...)`
-- [ ] Test in single player (code written + deployed 2026-09-21, untested)
+- [x] Test in single player (verified 2026-09-21 — note: bed must be *claimed*, which needs a roof + ≥80% cover; an unclaimed bed correctly yields "You have no home.")
 
 ## Phase 2 — The channel
 - [ ] Coroutine on hotkey: "Heading home..." countdown, configurable `CastSeconds` (default 8)
