@@ -20,7 +20,9 @@ namespace Homeward
         internal static ConfigEntry<bool> AllowWithMetal;
         internal static ConfigEntry<bool> CancelOnDamage;
         internal static ConfigEntry<bool> ShowPortalAnimation;
-        internal static ConfigEntry<string> ChannelVfx;
+        internal static ConfigEntry<bool> ChannelVfxEnabled;
+        internal static ConfigEntry<string> ChannelVfxColor;
+        internal static ConfigEntry<float> ChannelVfxRadius;
 
         private Harmony _harmony;
         private bool _wasOnCooldown;
@@ -44,10 +46,12 @@ namespace Homeward
             ShowPortalAnimation = Config.Bind("General", "ShowPortalAnimation", false,
                 "Show the vanilla portal swirl during the teleport. When false you get a plain fade to black.");
 
-            ChannelVfx = Config.Bind("General", "ChannelVfx", "Spirit",
-                "Vanilla status-effect visual shown on you while channeling. " +
-                "Spirit = blue ghost flames, Lightning = sparks, Frost = ice, Burning = fire, Poison = green haze, " +
-                "Shield = protection bubble, None = nothing. Any vanilla status effect name works.");
+            ChannelVfxEnabled = Config.Bind("Visuals", "ChannelVfxEnabled", true,
+                "Show the rune ring and motes under you while channeling.");
+            ChannelVfxColor = Config.Bind("Visuals", "ChannelVfxColor", "#7FD7FF",
+                "Tint of the ring and motes, as an HTML color (#RRGGBB or #RRGGBBAA).");
+            ChannelVfxRadius = Config.Bind("Visuals", "ChannelVfxRadius", 1.2f,
+                new ConfigDescription("Radius of the ring in meters.", new AcceptableValueRange<float>(0.3f, 5f)));
 
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll();

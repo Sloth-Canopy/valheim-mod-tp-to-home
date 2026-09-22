@@ -67,6 +67,20 @@
       <HintPath>$(ValheimManaged)/assembly_guiutils.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>$(ValheimManaged)/UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(ValheimManaged)/UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Textures baked into the DLL; loaded at runtime by ChannelVfx. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/rune_ring.png" LogicalName="Homeward.Resources.rune_ring.png" />
+    <EmbeddedResource Include="Resources/mote.png" LogicalName="Homeward.Resources.mote.png" />
   </ItemGroup>
 
   <!-- After build: drop the DLL into the running r2modman profile and the Thunderstore package folder. -->

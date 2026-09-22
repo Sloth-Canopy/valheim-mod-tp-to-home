@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.4.0
-- Channeling VFX: a vanilla status-effect visual (default Spirit) surrounds you while sitting; `ChannelVfx` config
+- Channeling VFX: a glowing rune ring with rising motes under you while sitting; `ChannelVfxEnabled` / `ChannelVfxColor` / `ChannelVfxRadius`
 
 ## 0.3.0
 - Cooldown shown as a buff-bar icon (bed) with a live countdown; "Homeward is ready." when it expires

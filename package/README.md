@@ -8,7 +8,7 @@ MMO-style recall for Valheim. Press a key, channel for a few seconds, wake up in
 - You sit down to channel (default 8 s) with a progress bar; moving, attacking, using an item, or taking damage cancels it
 - Respects the normal portal rules for metal (configurable)
 - Cooldown shows as a buff icon with a live countdown
-- A visual effect surrounds you while channeling (configurable)
+- A glowing rune ring appears under you while channeling (color/size configurable)
 
 ## Config
 `BepInEx/config/canpoy.homeward.cfg`
@@ -21,7 +21,9 @@ MMO-style recall for Valheim. Press a key, channel for a few seconds, wake up in
 | AllowWithMetal | false | Ignore the portal metal restriction |
 | CancelOnDamage | true | Taking damage cancels the channel |
 | ShowPortalAnimation | false | Show the vanilla portal swirl instead of a plain fade |
-| ChannelVfx | Spirit | Vanilla status-effect visual shown while channeling (Spirit, Lightning, Frost, Burning, Poison, Shield, None) |
+| ChannelVfxEnabled | true | Rune ring + motes under you while channeling |
+| ChannelVfxColor | #7FD7FF | Tint of the ring and motes (HTML color) |
+| ChannelVfxRadius | 1.2 | Ring radius in meters |
 
 ## Install
 r2modman / Thunderstore Mod Manager. Needs BepInExPack_Valheim.

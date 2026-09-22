@@ -54,7 +54,24 @@ grep -nE 'public .* TeleportTo\(' decompiled/Player.cs
 grep -rnE 'HaveCustomSpawnPoint' decompiled/ | head
 ```
 
+## Textures
+
+`src/Resources/*.png` are generated, not drawn: `python3 tools/gen_textures.py`
+(pure Python, no PIL). They're embedded in the DLL via `<EmbeddedResource>` and
+loaded at runtime by `ChannelVfx`. Re-run the script after tweaking the art, then
+rebuild. To preview alpha-only art, composite it on black (see the script's
+comments / git history for a one-off preview snippet).
+
 ## Gotchas
+
+**Unity 6 modules vs net472.** Some `UnityEngine.*Module.dll`s (e.g.
+`ImageConversionModule`) are built against netstandard 2.1. Referencing them from
+a net472 project fails with `CS1705` (netstandard version) and then `CS0518`
+(`ReadOnlySpan` not defined) — the game's `netstandard.dll` / `System.Memory.dll`
+are facades the compiler can't use. Workaround in use: **don't reference the
+module; bind the method by reflection at runtime** (`ChannelVfx.LoadImageMethod`).
+The type exists in Unity's runtime, it's only the compile that's the problem.
+
 
 **Leftover BepInEx in the game folder.** The Steam install dir contains
 `winhttp.dll`, `doorstop_config.ini` (enabled, pointing at

@@ -43,8 +43,11 @@ before starting the next — the instant-teleport version will tell you whether
 ## Phase 3 — Polish
 - [x] Cooldown icon in the buff bar (2026-09-22) — a `StatusEffect` subclass added straight via `SEMan.AddStatusEffect(instance)`; **no Jötunn needed**. Bed icon borrowed from the `bed` prefab, grey cooldown overlay, live `m:ss`, "Homeward is ready." when it expires
 - [ ] Test: icon appears on arrival, counts down, survives logout/login and death, disappears + message at 0
-- [x] Channeling VFX (2026-09-22) — hidden `StatusEffect` carrying a borrowed vanilla `m_startEffects`; `ChannelVfx` config (default Spirit)
-- [ ] Test: VFX appears on sit, follows the player, disappears on cancel/complete; try Spirit / Lightning / Frost / Shield and pick a default
+- [x] Channeling VFX v1 (2026-09-22) — borrowed vanilla status-effect visuals. Rejected: didn't look like channeling.
+- [x] Channeling VFX v2 (2026-09-22) — **our own**: rune ring quad on the ground (embedded PNG, spins, fades in) + code-built particle motes rising from the rim. `Visuals` config: enabled / color / radius
+- [ ] Test v2: ring appears flat under the player, spins, motes rise, both vanish on cancel/complete; check the log line `Channel VFX shader: ...`
+- [ ] Tune: color, radius, spin speed, mote density — by eye
+- [ ] Multiplayer: the VFX is local-only (no ZNetView). Decide if other players should see it (would need a registered prefab + RPC)
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
 - [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
 - [x] Remaining-cooldown text on early press (landed in Phase 1)

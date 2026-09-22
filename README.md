@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** 0.4.0 — channeling VFX (2026-09-22), awaiting in-game test alongside the 0.3.0 cooldown icon.
+**Status:** 0.4.0 — custom channeling VFX (rune ring + motes), first swing 2026-09-22, awaiting in-game test alongside the 0.3.0 cooldown icon.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -22,6 +22,7 @@ docs/
 package/             Thunderstore package template (manifest, README, changelog; icon TODO)
 decompiled/          ilspycmd output of assembly_valheim.dll (gitignored, regenerable)
 decompiled-guiutils/ same for assembly_guiutils.dll (GuiBar)
+tools/               gen_textures.py — regenerates src/Resources/*.png
 src/                 the mod; `dotnet build -c Release` deploys
   HomewardPlugin.cs  BepInEx entry point, config, hotkey
   Channel.cs         the sit-still channel + cancel rules + departure
@@ -29,7 +30,8 @@ src/                 the mod; `dotnet build -c Release` deploys
   Cooldown.cs        real-time cooldown in Player.m_customData
   Patches.cs         Harmony patches (damage, portal swirl, action bar)
   CooldownEffect.cs  buff-bar icon; a StatusEffect that mirrors the cooldown
-  ChannelEffect.cs   hidden StatusEffect that carries a borrowed vanilla VFX while channeling
+  ChannelVfx.cs      our channeling visual: rune ring + motes, built at runtime from embedded PNGs
+  Resources/         generated textures (see tools/gen_textures.py)
 ```
 
 ## Quick facts

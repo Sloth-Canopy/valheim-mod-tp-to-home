@@ -20,7 +20,7 @@ Settled choices. If you want to change one, change it here first and say why.
 | 14 | Loading screen | **Plain fade to black**, no portal swirl (config `ShowPortalAnimation` to restore) | A seamless teleport isn't possible — the destination zone has to stream in and you'd watch terrain pop. The fade reads as "close your eyes, wake up at home", which fits the bed better than the portal effect does. |
 | 15 | Channel UI | **Borrow the game's action bar** (`Hud.m_actionBarRoot`) instead of custom UI | Native look, zero art, no Jötunn dependency. Cost: a Harmony postfix on a private Hud method, re-verified each game update. |
 
-| 16 | Channeling VFX | **Borrow a vanilla status effect's `m_startEffects`** via a hidden status effect; `ChannelVfx` config, default `Spirit` | Zero art, zero asset bundles, follows the player, cleaned up by the game's own `Stop()`. Elemental DoT visuals (Spirit/Lightning/Frost) already look like "something magical is happening to this viking". Default is a guess until seen in-game. |
+| 16 | Channeling VFX | **Custom, built at runtime**: rune-ring quad + code-configured `ParticleSystem`, textures embedded in the DLL (revised 2026-09-22; v1 borrowed vanilla status-effect VFX and was rejected on looks) | No Unity Editor, no asset bundle — iteration is build → relaunch. Textures are generated procedurally by `tools/gen_textures.py`, so there's no art pipeline either. Local-only for now. If we ever want custom shaders or meshes, that's the asset-bundle route (decision pending). |
 
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.
