@@ -21,7 +21,9 @@ namespace Homeward
         public static void Show(Player player)
         {
             Hide();
-            if (!HomewardPlugin.ChannelVfxEnabled.Value)
+            bool visuals = HomewardPlugin.ChannelVfxEnabled.Value;
+            bool sound = HomewardPlugin.ChannelSoundEnabled.Value;
+            if (!visuals && !sound)
             {
                 return;
             }
@@ -31,11 +33,18 @@ namespace Homeward
                 _root.transform.SetParent(player.transform, worldPositionStays: false);
                 _root.transform.localPosition = new Vector3(0f, 0.06f, 0f);
                 _root.transform.localRotation = Quaternion.identity;
-                _root.AddComponent<ChannelVfxBehaviour>().Init(
-                    NewMaterial(RingTexture()),
-                    NewMaterial(MoteTexture()),
-                    ParseColor(HomewardPlugin.ChannelVfxColor.Value),
-                    HomewardPlugin.ChannelVfxRadius.Value);
+                if (visuals)
+                {
+                    _root.AddComponent<ChannelVfxBehaviour>().Init(
+                        NewMaterial(RingTexture()),
+                        NewMaterial(MoteTexture()),
+                        ParseColor(HomewardPlugin.ChannelVfxColor.Value),
+                        HomewardPlugin.ChannelVfxRadius.Value);
+                }
+                if (sound)
+                {
+                    ChannelSound.Attach(_root, HomewardPlugin.ChannelSoundVolume.Value);
+                }
             }
             catch (Exception e)
             {
@@ -127,12 +136,6 @@ namespace Homeward
         private static Texture2D RingTexture() => _ringTex ?? (_ringTex = LoadEmbedded("Homeward.Resources.rune_ring.png"));
         private static Texture2D MoteTexture() => _moteTex ?? (_moteTex = LoadEmbedded("Homeward.Resources.mote.png"));
 
-        // ImageConversion lives in a Unity 6 module built against netstandard 2.1, which
-        // our net472 build can't reference cleanly. It exists at runtime, so bind late.
-        private static readonly MethodInfo LoadImageMethod = Type
-            .GetType("UnityEngine.ImageConversion, UnityEngine.ImageConversionModule")
-            ?.GetMethod("LoadImage", new[] { typeof(Texture2D), typeof(byte[]) });
-
         private static Texture2D LoadEmbedded(string resourceName)
         {
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
@@ -143,12 +146,8 @@ namespace Homeward
                 }
                 byte[] bytes = new byte[s.Length];
                 s.Read(bytes, 0, bytes.Length);
-                if (LoadImageMethod == null)
-                {
-                    throw new MissingMethodException("UnityEngine.ImageConversion.LoadImage not found");
-                }
                 Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: true);
-                LoadImageMethod.Invoke(null, new object[] { tex, bytes });
+                ImageConversion.LoadImage(tex, bytes);
                 tex.wrapMode = TextureWrapMode.Clamp;
                 tex.filterMode = FilterMode.Bilinear;
                 return tex;

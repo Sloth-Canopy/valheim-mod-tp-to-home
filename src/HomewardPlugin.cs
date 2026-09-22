@@ -11,7 +11,7 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.4.0";
+        public const string PluginVersion = "0.5.0";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
@@ -23,6 +23,8 @@ namespace Homeward
         internal static ConfigEntry<bool> ChannelVfxEnabled;
         internal static ConfigEntry<string> ChannelVfxColor;
         internal static ConfigEntry<float> ChannelVfxRadius;
+        internal static ConfigEntry<bool> ChannelSoundEnabled;
+        internal static ConfigEntry<float> ChannelSoundVolume;
 
         private Harmony _harmony;
         private bool _wasOnCooldown;
@@ -52,6 +54,10 @@ namespace Homeward
                 "Tint of the ring and motes, as an HTML color (#RRGGBB or #RRGGBBAA).");
             ChannelVfxRadius = Config.Bind("Visuals", "ChannelVfxRadius", 1.2f,
                 new ConfigDescription("Radius of the ring in meters.", new AcceptableValueRange<float>(0.3f, 5f)));
+            ChannelSoundEnabled = Config.Bind("Visuals", "ChannelSoundEnabled", true,
+                "Play a gentle drone-and-chimes loop while channeling.");
+            ChannelSoundVolume = Config.Bind("Visuals", "ChannelSoundVolume", 0.5f,
+                new ConfigDescription("Volume of the channeling sound (also scaled by the game's SFX slider).", new AcceptableValueRange<float>(0f, 1f)));
 
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll();

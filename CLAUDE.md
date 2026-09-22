@@ -1,7 +1,7 @@
 # Homeward (valheim-mod-tp-to-home)
 
 Valheim BepInEx/Harmony mod: hotkey teleport to claimed bed with a cooldown.
-C# / net472 / Unity Mono. Built from WSL with the .NET 10 SDK.
+C# / netstandard2.1 (Unity 6 API profile) / Unity Mono. Built from WSL with the .NET 10 SDK.
 
 ## Read before working
 - `docs/plan.md` — phased plan and current phase

@@ -26,11 +26,13 @@ RossItemDrawers. Good to know for conflict-hunting later.
 | ilspycmd | 11.0.0 | `dotnet tool install -g ilspycmd` |
 | PATH | | `export PATH="$PATH:$HOME/.dotnet/tools"` is in `~/.bashrc` |
 
-The mod targets **`net472`** because that's what Valheim's Mono runtime speaks.
-The SDK version and the target framework are independent — SDK 10 compiles a
-net472 library fine, it just needs the reference assemblies package
-(`Microsoft.NETFramework.ReferenceAssemblies`, pulled in automatically by the
-SDK when you target net472).
+The mod targets **`netstandard2.1`** (changed from `net472` on 2026-09-22).
+Valheim runs on Unity 6, whose Mono exposes the .NET Standard 2.1 API profile,
+and several `UnityEngine.*Module.dll`s (Audio, ImageConversion, ...) are built
+against netstandard 2.1 — a net472 project can't reference them (`CS1705`).
+BepInEx and Harmony are net35 and still resolve fine through the standard
+facades. The SDK version is unrelated: SDK 10 builds a netstandard2.1 library
+with nothing extra.
 
 ## Regenerating `decompiled/`
 
@@ -64,13 +66,11 @@ comments / git history for a one-off preview snippet).
 
 ## Gotchas
 
-**Unity 6 modules vs net472.** Some `UnityEngine.*Module.dll`s (e.g.
-`ImageConversionModule`) are built against netstandard 2.1. Referencing them from
-a net472 project fails with `CS1705` (netstandard version) and then `CS0518`
-(`ReadOnlySpan` not defined) — the game's `netstandard.dll` / `System.Memory.dll`
-are facades the compiler can't use. Workaround in use: **don't reference the
-module; bind the method by reflection at runtime** (`ChannelVfx.LoadImageMethod`).
-The type exists in Unity's runtime, it's only the compile that's the problem.
+**Unity 6 modules vs net472.** If you ever retarget to net472, referencing
+`UnityEngine.AudioModule` / `ImageConversionModule` fails with `CS1705`
+(netstandard 2.1) and then `CS0518` (`ReadOnlySpan`). The game's `netstandard.dll`
+and `System.Memory.dll` are facades the compiler can't use. That's why the
+project is netstandard2.1 — don't go back.
 
 
 **Leftover BepInEx in the game folder.** The Steam install dir contains

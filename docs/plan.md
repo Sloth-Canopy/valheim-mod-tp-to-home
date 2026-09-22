@@ -45,7 +45,9 @@ before starting the next — the instant-teleport version will tell you whether
 - [ ] Test: icon appears on arrival, counts down, survives logout/login and death, disappears + message at 0
 - [x] Channeling VFX v1 (2026-09-22) — borrowed vanilla status-effect visuals. Rejected: didn't look like channeling.
 - [x] Channeling VFX v2 (2026-09-22) — **our own**: rune ring quad on the ground (embedded PNG, spins, fades in) + code-built particle motes rising from the rim. `Visuals` config: enabled / color / radius
-- [ ] Test v2: ring appears flat under the player, spins, motes rise, both vanish on cancel/complete; check the log line `Channel VFX shader: ...`
+- [x] Test v2 (2026-09-22): ring flat, spins, motes rise (after the curve-mode fix), cleanup on arrival under the black screen. Shader found: `Sprites/Default`
+- [x] Channeling sound (2026-09-22) — synthesized drone + pentatonic chimes, 8 s loop, 3D on the ring, routed through a borrowed vanilla mixer group; `ChannelSoundEnabled` / `ChannelSoundVolume`
+- [ ] Test sound: plays on sit, stops on cancel/arrival, obeys the SFX slider (log: `Channel sound mixer: ...`)
 - [ ] Tune: color, radius, spin speed, mote density — by eye
 - [ ] Multiplayer: the VFX is local-only (no ZNetView). Decide if other players should see it (would need a registered prefab + RPC)
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`

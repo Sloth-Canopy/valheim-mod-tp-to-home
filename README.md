@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** 0.4.0 — custom channeling VFX (rune ring + motes), first swing 2026-09-22, awaiting in-game test alongside the 0.3.0 cooldown icon.
+**Status:** 0.5.0 — channeling sound (2026-09-22), awaiting in-game test. Ring + motes verified.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -31,6 +31,7 @@ src/                 the mod; `dotnet build -c Release` deploys
   Patches.cs         Harmony patches (damage, portal swirl, action bar)
   CooldownEffect.cs  buff-bar icon; a StatusEffect that mirrors the cooldown
   ChannelVfx.cs      our channeling visual: rune ring + motes, built at runtime from embedded PNGs
+  ChannelSound.cs    synthesized drone-and-chimes loop while channeling (no audio asset)
   Resources/         generated textures (see tools/gen_textures.py)
 ```
 
@@ -42,7 +43,7 @@ src/                 the mod; `dotnet build -c Release` deploys
 | Mod loader | BepInEx 5.4.23.x (via r2modman profile `canpoy-mods`) |
 | Patching | HarmonyX (bundled with BepInEx) |
 | Helper lib | none — BepInEx + Harmony only |
-| Target framework | `net472` |
+| Target framework | `netstandard2.1` (Unity 6 API profile; see dev-setup.md) |
 | Build SDK | .NET 10 SDK in WSL (`dotnet --version` → 10.0.112) |
 
 ## Docs to read first

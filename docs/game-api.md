@@ -136,6 +136,12 @@ Status effects are **not persisted** in the player save (no `Save`/`Load` in `SE
 | `HasEffects` | 130 | `public bool HasEffects()` | |
 | `m_effectPrefabs` | 35 | `public EffectData[] m_effectPrefabs` | `EffectData.m_prefab` (12), `m_attach` (18). |
 
+## AudioMan (`AudioMan.cs`) — volume routing
+
+| Member | Line | Notes |
+|---|---|---|
+| `m_masterMixer` | 71 | `public AudioMixer m_masterMixer`; the SFX slider sets its `"SfxVol"` parameter (353). No public SFX `AudioMixerGroup` field — vanilla sound prefabs carry the group on their `AudioSource.outputAudioMixerGroup`, so we borrow one from a status-effect start-effect prefab (`ChannelSound.Mixer`). |
+
 ## ZNetScene / Piece — for the bed icon
 
 | Member | Line | Signature | Notes |

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+- Gentle channeling sound (drone + chimes); `ChannelSoundEnabled` / `ChannelSoundVolume`
+- Stay seated through the fade to black; stand up on arrival
+
 ## 0.4.0
 - Channeling VFX: a glowing rune ring with rising motes under you while sitting; `ChannelVfxEnabled` / `ChannelVfxColor` / `ChannelVfxRadius`
 
