@@ -13,52 +13,54 @@ namespace Homeward
     /// </summary>
     internal static class ChannelVfx
     {
-        private static GameObject _root;
         private static Texture2D _ringTex;
         private static Texture2D _moteTex;
         private static Shader _shader;
 
-        public static void Show(Player player)
+        /// <summary>Build a ring at a world position. Returns null if it fails (logged).</summary>
+        public static GameObject Build(Vector3 pos, Color color, float radius, bool visuals, bool sound, float ttlSeconds)
         {
-            Hide();
-            bool visuals = HomewardPlugin.ChannelVfxEnabled.Value;
-            bool sound = HomewardPlugin.ChannelSoundEnabled.Value;
             if (!visuals && !sound)
             {
-                return;
+                return null;
             }
+            GameObject root = new GameObject("Homeward_ChannelVfx");
             try
             {
-                _root = new GameObject("Homeward_ChannelVfx");
-                _root.transform.SetParent(player.transform, worldPositionStays: false);
-                _root.transform.localPosition = new Vector3(0f, 0.06f, 0f);
-                _root.transform.localRotation = Quaternion.identity;
-                if (visuals)
-                {
-                    _root.AddComponent<ChannelVfxBehaviour>().Init(
-                        NewMaterial(RingTexture()),
-                        NewMaterial(MoteTexture()),
-                        ParseColor(HomewardPlugin.ChannelVfxColor.Value),
-                        HomewardPlugin.ChannelVfxRadius.Value);
-                }
+                root.transform.position = pos + new Vector3(0f, 0.06f, 0f);
+                ChannelVfxBehaviour fx = root.AddComponent<ChannelVfxBehaviour>();
+                fx.Init(visuals ? NewMaterial(RingTexture()) : null,
+                        visuals ? NewMaterial(MoteTexture()) : null,
+                        color, radius, ttlSeconds);
                 if (sound)
                 {
-                    ChannelSound.Attach(_root, HomewardPlugin.ChannelSoundVolume.Value);
+                    fx.Sound = ChannelSound.Attach(root, HomewardPlugin.ChannelSoundVolume.Value);
                 }
+                return root;
             }
             catch (Exception e)
             {
                 HomewardPlugin.Log.LogError($"Channel VFX failed: {e}");
-                Hide();
+                UnityEngine.Object.Destroy(root);
+                return null;
             }
         }
 
-        public static void Hide()
+        /// <summary>Stop the sound, stop emitting, fade the ring out, then destroy.</summary>
+        public static void FadeOut(GameObject root)
         {
-            if (_root != null)
+            if (root == null)
             {
-                UnityEngine.Object.Destroy(_root);
-                _root = null;
+                return;
+            }
+            ChannelVfxBehaviour fx = root.GetComponent<ChannelVfxBehaviour>();
+            if (fx != null)
+            {
+                fx.BeginFadeOut();
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(root);
             }
         }
 
@@ -160,16 +162,27 @@ namespace Homeward
         private const float FadeInSeconds = 0.7f;
         private const float SpinDegreesPerSecond = 18f;
 
+        private const float FadeOutSeconds = 0.5f;
+
         private Transform _ring;
         private Material _ringMat;
         private ParticleSystem _motes;
         private Color _color;
         private float _t0;
+        private float _ttl;
+        private float _fadeOutStart = -1f;
 
-        public void Init(Material ringMat, Material moteMat, Color color, float radius)
+        public AudioSource Sound;
+
+        public void Init(Material ringMat, Material moteMat, Color color, float radius, float ttlSeconds)
         {
             _color = color;
             _t0 = Time.time;
+            _ttl = ttlSeconds;
+            if (ringMat == null)
+            {
+                return; // sound-only
+            }
 
             // Ground ring: a quad lying flat, spun around its normal.
             GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -237,18 +250,58 @@ namespace Homeward
             _motes.Play();
         }
 
+        public void BeginFadeOut()
+        {
+            if (_fadeOutStart >= 0f)
+            {
+                return;
+            }
+            _fadeOutStart = Time.time;
+            if (Sound != null)
+            {
+                Sound.Stop();
+            }
+            if (_motes != null)
+            {
+                _motes.Stop(true, ParticleSystemStopBehavior.StopEmitting); // let live motes finish
+            }
+            if (_ring == null)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         private void Update()
         {
+            if (_ttl > 0f && _fadeOutStart < 0f && Time.time - _t0 > _ttl)
+            {
+                BeginFadeOut();
+            }
             if (_ring == null)
             {
                 return;
             }
             _ring.Rotate(0f, 0f, SpinDegreesPerSecond * Time.deltaTime, Space.Self);
-            ApplyRingAlpha(Mathf.Clamp01((Time.time - _t0) / FadeInSeconds));
+            float alpha = Mathf.Clamp01((Time.time - _t0) / FadeInSeconds);
+            if (_fadeOutStart >= 0f)
+            {
+                float k = (Time.time - _fadeOutStart) / FadeOutSeconds;
+                alpha *= Mathf.Clamp01(1f - k);
+                if (k >= 1f && (_motes == null || _motes.particleCount == 0))
+                {
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+            ApplyRingAlpha(alpha);
         }
 
         private void ApplyRingAlpha(float a)
         {
+            if (_ringMat == null)
+            {
+                return;
+            }
             Color c = new Color(_color.r, _color.g, _color.b, _color.a * a);
             if (_ringMat.HasProperty("_TintColor"))
             {

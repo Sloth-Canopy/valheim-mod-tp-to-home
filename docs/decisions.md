@@ -25,6 +25,8 @@ Settled choices. If you want to change one, change it here first and say why.
 | 17 | Channeling sound | **Synthesized at runtime** (drone + chimes into an `AudioClip` via `SetData`) | Same philosophy as the textures: no assets, no decoder, tunable by numbers. 3D-positioned on the ring, borrowed vanilla mixer group so the SFX slider applies. |
 | 18 | Target framework | **`netstandard2.1`**, not `net472` | Unity 6's Audio/ImageConversion modules are netstandard 2.1; net472 can't reference them. BepInEx/Harmony (net35) still work through facades. Verified 2026-09-22: 0.5.0 loads and runs in-game. |
 
+| 19 | Showing the ring to others | **Routed RPC broadcast** (`ZRoutedRpc` to `Everybody`), each client builds the ring itself — not a networked prefab | No ZNetView/prefab registration, no ZDO, no ordering issues; broadcast is delivered locally too so there's one code path. Costs: late joiners miss an in-progress channel (8 s window, fine) and a lost Stop needs a TTL (30 s). **Sound is deliberately never sent** — it's feedback for the channeler, noise for everyone else. |
+
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.
 - Cancel-on-movement tolerance: how far is "moved"? Start with 0.1 units and tune.

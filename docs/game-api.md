@@ -136,6 +136,20 @@ Status effects are **not persisted** in the player save (no `Save`/`Load` in `SE
 | `HasEffects` | 130 | `public bool HasEffects()` | |
 | `m_effectPrefabs` | 35 | `public EffectData[] m_effectPrefabs` | `EffectData.m_prefab` (12), `m_attach` (18). |
 
+## ZRoutedRpc (`ZRoutedRpc.cs`) — talking to other clients
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `instance` | 57 | `public static ZRoutedRpc instance` | Recreated per world session — re-register handlers when it changes (`ChannelNet.EnsureRegistered`). |
+| `Everybody` | 41 | `public const long Everybody = 0L` | |
+| `Register<T,U,V>` | 225 | `public void Register<T, U, V>(string name, Action<long, T, U, V> f)` | First arg of the handler is the sender peer id. 1–6 params supported. |
+| `InvokeRoutedRPC` | 97 | `public void InvokeRoutedRPC(long targetPeerID, string methodName, params object[] parameters)` | **Delivered locally too** when target is `Everybody` or our own id (130–133). Unknown method names are silently dropped on the receiver (`HandleRoutedRPC`, `m_functions.TryGetValue`) — unmodded clients are unaffected. |
+
+Serializable parameter types (`ZRpc.Serialize`, `ZRpc.cs:309–355`): int, uint, long, float, double, bool, string, ZPackage, byte[], Vector3, Quaternion, ZDOID.
+
+| `ZNet.GetUID` | `ZNet.cs:2075` | `public static long GetUID()` | Our own peer id, for "send to just me". |
+| `Character.GetZDOID` | `Character.cs:3387` | `public ZDOID GetZDOID()` | Stable key for a player across clients. |
+
 ## AudioMan (`AudioMan.cs`) — volume routing
 
 | Member | Line | Notes |

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+- Other players with the mod now see your channeling ring; `ChannelVfxVisibleToOthers`
+- Rings fade out instead of popping
+
 ## 0.5.0
 - Gentle channeling sound (drone + chimes); `ChannelSoundEnabled` / `ChannelSoundVolume`
 - Stay seated through the fade to black; stand up on arrival

@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** 0.5.0 — channeling sound (2026-09-22), awaiting in-game test. Ring + motes verified.
+**Status:** 0.6.0 — ring visible to other players (2026-09-22), awaiting a multiplayer test. Everything else verified in single player.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -32,6 +32,7 @@ src/                 the mod; `dotnet build -c Release` deploys
   CooldownEffect.cs  buff-bar icon; a StatusEffect that mirrors the cooldown
   ChannelVfx.cs      our channeling visual: rune ring + motes, built at runtime from embedded PNGs
   ChannelSound.cs    synthesized drone-and-chimes loop while channeling (no audio asset)
+  ChannelNet.cs      routed-RPC start/stop broadcast so other players see the ring
   Resources/         generated textures (see tools/gen_textures.py)
 ```
 

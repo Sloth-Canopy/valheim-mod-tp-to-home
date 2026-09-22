@@ -100,7 +100,7 @@ namespace Homeward
             _seated = false;
             _startTime = Time.time;
             _startPos = player.transform.position;
-            ChannelVfx.Show(player);
+            ChannelNet.Start(player);
             HomewardPlugin.Log.LogInfo("Channel started");
         }
 
@@ -123,7 +123,11 @@ namespace Homeward
                 // Keep sitting and keep the ring: the fade to black is about to start
                 // and Flight cleans both up on arrival, under the black screen.
                 Active = false;
-                if (!Depart(player))
+                if (Depart(player))
+                {
+                    ChannelNet.Stop(player); // ring fades as the viking vanishes; emote ends on arrival
+                }
+                else
                 {
                     EndPose(player);
                 }
@@ -142,7 +146,7 @@ namespace Homeward
         {
             Active = false;
             DamageTaken = false;
-            ChannelVfx.Hide();
+            ChannelNet.Clear();
         }
 
         private static string CancelReason(Player player)
@@ -203,7 +207,7 @@ namespace Homeward
         /// <summary>Stand up and drop the ring. Called on cancel, on a refused departure, and on arrival.</summary>
         internal static void EndPose(Player player)
         {
-            ChannelVfx.Hide();
+            ChannelNet.Stop(player);
             StopEmoteMethod?.Invoke(player, null);
         }
 
