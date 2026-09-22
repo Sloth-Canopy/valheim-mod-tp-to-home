@@ -120,18 +120,20 @@ namespace Homeward
 
             if (Remaining <= 0f)
             {
+                // Keep sitting and keep the ring: the fade to black is about to start
+                // and Flight cleans both up on arrival, under the black screen.
                 Active = false;
-                ChannelVfx.Hide();
-                StopEmote(player);
-                Depart(player);
+                if (!Depart(player))
+                {
+                    EndPose(player);
+                }
             }
         }
 
         public static void Cancel(Player player, string message)
         {
             Active = false;
-            ChannelVfx.Hide();
-            StopEmote(player);
+            EndPose(player);
             Say(player, message);
             HomewardPlugin.Log.LogInfo($"Channel cancelled: {message}");
         }
@@ -182,23 +184,26 @@ namespace Homeward
                 && !player.IsAttached();
         }
 
-        private static void Depart(Player player)
+        private static bool Depart(Player player)
         {
             Vector3 target = Game.instance.GetPlayerProfile().GetCustomSpawnPoint();
             if (!player.TeleportTo(target, player.transform.rotation, distantTeleport: true))
             {
                 // Not owner, already teleporting, or inside the game's 2 s teleport guard.
                 HomewardPlugin.Log.LogWarning("TeleportTo refused");
-                return;
+                return false;
             }
 
             Flight.Begin();
             Say(player, "Heading home...");
             HomewardPlugin.Log.LogInfo($"Heading home to {target}");
+            return true;
         }
 
-        private static void StopEmote(Player player)
+        /// <summary>Stand up and drop the ring. Called on cancel, on a refused departure, and on arrival.</summary>
+        internal static void EndPose(Player player)
         {
+            ChannelVfx.Hide();
             StopEmoteMethod?.Invoke(player, null);
         }
 

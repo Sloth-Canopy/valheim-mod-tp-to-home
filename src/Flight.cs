@@ -21,6 +21,7 @@ namespace Homeward
             }
 
             InProgress = false;
+            Channel.EndPose(player); // stand up while the screen is still black
             Cooldown.Stamp(player);
             HomewardPlugin.Log.LogInfo("Arrived home, cooldown started");
         }
