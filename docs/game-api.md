@@ -26,6 +26,8 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 | `InPlaceMode` | 3675 | `public override bool InPlaceMode()` | Build mode. Cancel condition. |
 | `InMinorAction` | 7120 | `public override bool InMinorAction()` | Eating / item-use animations. Cancel condition. |
 | `IsDead` | 5829 | `public override bool IsDead()` | |
+| `IsRiding` | 6459 | `public override bool IsRiding()` | Refuse to start the channel. |
+| `IsAttached` | 6426 | `public override bool IsAttached()` | Chairs, ships, mounts. Refuse to start. |
 | `Message` | 5388 | `public override void Message(MessageHud.MessageType type, string msg, int amount = 0, Sprite icon = null, bool log = false)` | Local-player-only wrapper around `MessageHud`. Use this instead of `MessageHud.instance` directly. |
 
 ## Humanoid (`Humanoid.cs`) — Player inherits this
@@ -34,6 +36,7 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 |---|---|---|---|
 | `IsTeleportable` | 2002 | `public bool IsTeleportable(bool allowAllItems)` | Delegates to `Inventory.IsTeleportable`. Pass our `AllowWithMetal` config directly. |
 | `IsDrawingBow` | 1742 | `public override bool IsDrawingBow()` | Cancel condition. |
+| `IsSitting` | 1478 | `public override bool IsSitting()` | `GetCurrentAnimHash() == s_animatorTagSitting` — the **animator** is in the sit state. Vanilla's own "am I sitting" test (`Player.cs:1154`: `InEmote() && IsSitting()`). `InEmote()` alone is true while swimming because it only reads the ZDO flag. |
 | `IsBlocking` | 1878 | `public override bool IsBlocking()` | Cancel condition. |
 
 ## Inventory (`Inventory.cs`)
@@ -41,6 +44,13 @@ Rule: **don't call a game method that isn't in this table.** Grep it, add it, th
 | Member | Line | Signature | Notes |
 |---|---|---|---|
 | `IsTeleportable` | 1185 | `public bool IsTeleportable(bool allowAllItems)` | Items with `m_toolTier >= 1000` are *never* teleportable regardless of flag. Also returns true if world key `GlobalKeys.TeleportAll` is set. |
+
+## Character (`Character.cs`) — base of Humanoid/Player
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `IsOnGround` | 2848 | `public bool IsOnGround()` | Refuse to start / cancel if false (jumping, falling). |
+| `IsSwimming` | 3523 | `public bool IsSwimming()` | Refuse to start / cancel. `StartEmote("sit")` does **not** check this. |
 
 ## PlayerProfile (`PlayerProfile.cs`)
 

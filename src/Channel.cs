@@ -20,8 +20,9 @@ namespace Homeward
         private static Vector3 _startPos;
 
         // StartEmote writes to the ZDO; Player.UpdateEmote picks it up a frame or two
-        // later. Don't demand InEmote() until that round-trip has had time to land.
-        private const float EmoteGraceSeconds = 0.5f;
+        // later and the animator then blends into the sit state. Don't demand
+        // InEmote() && IsSitting() until that has had time to land.
+        private const float EmoteGraceSeconds = 1.0f;
         private const float MoveTolerance = 0.5f;
 
         // Player.StopEmote is protected; Harmony's AccessTools gets us at it.
@@ -68,6 +69,15 @@ namespace Homeward
             if (HomewardPlugin.CastSeconds.Value <= 0f)
             {
                 Depart(player);
+                return;
+            }
+
+            // StartEmote will happily "succeed" while swimming or mid-air, but the
+            // animator never enters the sit state there. Same rule as vanilla: you can
+            // only go home from somewhere you can actually sit down.
+            if (!CanSitHere(player))
+            {
+                Say(player, "You need solid ground to sit.");
                 return;
             }
 
@@ -129,8 +139,23 @@ namespace Homeward
             if (player.InMinorAction()) return "used an item";
             if (player.InPlaceMode()) return "building";
             if (Vector3.Distance(player.transform.position, _startPos) > MoveTolerance) return "moved";
-            if (Time.time - _startTime > EmoteGraceSeconds && !player.InEmote()) return "moved";
+            if (!CanSitHere(player)) return "no solid ground";
+            if (Time.time - _startTime > EmoteGraceSeconds)
+            {
+                // The game drops the emote on movement input; the animator leaves the
+                // sitting state if the player is somehow not actually sitting.
+                if (!player.InEmote()) return "moved";
+                if (!player.IsSitting()) return "not sitting";
+            }
             return null;
+        }
+
+        private static bool CanSitHere(Player player)
+        {
+            return player.IsOnGround()
+                && !player.IsSwimming()
+                && !player.IsRiding()
+                && !player.IsAttached();
         }
 
         private static void Depart(Player player)
