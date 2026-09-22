@@ -7,6 +7,7 @@ MMO-style recall for Valheim. Press a key, channel for a few seconds, wake up in
 - Cooldown between uses (default 60 min, real time, survives logout)
 - You sit down to channel (default 8 s) with a progress bar; moving, attacking, using an item, or taking damage cancels it
 - Respects the normal portal rules for metal (configurable)
+- Cooldown shows as a buff icon with a live countdown
 
 ## Config
 `BepInEx/config/canpoy.homeward.cfg`

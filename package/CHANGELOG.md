@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0
+- Cooldown shown as a buff-bar icon (bed) with a live countdown; "Homeward is ready." when it expires
+
 ## 0.2.0
 - Channel: sit for CastSeconds with a progress bar; cancelled by moving, attacking, item use, building, or damage
 - Plain fade to black instead of the portal swirl (ShowPortalAnimation to restore)

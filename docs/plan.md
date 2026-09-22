@@ -41,7 +41,8 @@ before starting the next — the instant-teleport version will tell you whether
 - ~~Reuse portal VFX/SFX~~ — dropped; the fade-to-black is the effect now
 
 ## Phase 3 — Polish
-- [ ] Jötunn `CustomStatusEffect` for the cooldown icon in the buff bar
+- [x] Cooldown icon in the buff bar (2026-09-22) — a `StatusEffect` subclass added straight via `SEMan.AddStatusEffect(instance)`; **no Jötunn needed**. Bed icon borrowed from the `bed` prefab, grey cooldown overlay, live `m:ss`, "Homeward is ready." when it expires
+- [ ] Test: icon appears on arrival, counts down, survives logout/login and death, disappears + message at 0
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
 - [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
 - [x] Remaining-cooldown text on early press (landed in Phase 1)

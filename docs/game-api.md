@@ -86,6 +86,45 @@ Get the profile via `Game.instance.GetPlayerProfile()`.
 | `m_actionName` | 148 | `public TMP_Text m_actionName` | Needs `Unity.TextMeshPro.dll` + `UnityEngine.UI.dll` references to compile. |
 | `UpdateBlackScreen` | 571 | `private void UpdateBlackScreen(Player player, float dt)` | For reference: shows the loading screen while `IsTeleporting()`; picks portal swirl vs. plain black via `ShowTeleportAnimation()`. |
 
+## StatusEffect (`StatusEffect.cs`) — base for the cooldown icon
+
+`public class StatusEffect : ScriptableObject` (line 4). Create with `ScriptableObject.CreateInstance<T>()`; `NameHash()` (357) hashes `name`.
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `m_name` | 16 | `public string m_name` | Shown under the icon via `Localization.Localize` — plain text works. |
+| `m_icon` | 20 | `public Sprite m_icon` | |
+| `m_cooldownIcon` | 24 | `public bool m_cooldownIcon` | Hud toggles a "Cooldown" overlay child on the icon (`Hud.cs:1673`). |
+| `m_hidden` | 26 | `public bool m_hidden` | |
+| `m_tooltip` | 32 | `public string m_tooltip` | |
+| `m_ttl` | 51 | `public float m_ttl` | We leave it 0 and override `IsDone` instead. |
+| `m_character` | 69 | `public Character m_character` | Set in `Setup`. |
+| `Setup` | 87 | `public virtual void Setup(Character character)` | |
+| `GetTooltipString` | 101 | `public virtual string GetTooltipString()` | |
+| `UpdateStatusEffect` | 167 | `public virtual void UpdateStatusEffect(float dt)` | |
+| `IsDone` | 181 | `public virtual bool IsDone()` | SEMan removes the effect when true. Ours returns `Cooldown.RemainingSeconds <= 0`. |
+| `GetIconText` | 209 | `public virtual string GetIconText()` | The "TimeText" under the icon (`Hud.cs:1676`). |
+| `GetTimeString` | ~218 | `public static string GetTimeString(float time, bool sufix = false, bool alwaysShowMinutes = false)` | `"m:ss"` / `"s"` formatting the game uses. |
+| `Clone` | — | `public StatusEffect Clone()` | `MemberwiseClone` — subclass preserved. |
+
+Status effects are **not persisted** in the player save (no `Save`/`Load` in `SEMan.cs`, nothing in `Player.cs`). We re-add ours from `m_customData` whenever it's missing.
+
+## SEMan (`SEMan.cs`) — via `Character.GetSEMan()` (`Character.cs:4356`)
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `AddStatusEffect` | 184 | `public StatusEffect AddStatusEffect(StatusEffect statusEffect, bool resetTime = false, ...)` | Takes a raw instance — clones it, calls `Setup`. **No ObjectDB registration needed**, hence no Jötunn. Returns null if already present. |
+| `HaveStatusEffect` | 293 | `public bool HaveStatusEffect(int nameHash)` | |
+| `RemoveStatusEffect` | 219 | `public bool RemoveStatusEffect(int nameHash, bool quiet = false)` | |
+
+## ZNetScene / Piece — for the bed icon
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `ZNetScene.instance` | `ZNetScene.cs:31` | `public static ZNetScene instance` | Null outside a loaded world. |
+| `ZNetScene.GetPrefab` | `ZNetScene.cs:146` | `public GameObject GetPrefab(string name)` | `"bed"` is the vanilla bed. |
+| `Piece.m_icon` | `Piece.cs:119` | `public Sprite m_icon` | The build-menu icon; we borrow the bed's. |
+
 ## Input guards — don't fire the hotkey while typing
 
 | Class | Line | Signature |

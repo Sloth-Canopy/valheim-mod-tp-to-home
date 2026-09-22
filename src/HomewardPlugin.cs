@@ -11,7 +11,7 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.2.0";
+        public const string PluginVersion = "0.3.0";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
@@ -22,6 +22,7 @@ namespace Homeward
         internal static ConfigEntry<bool> ShowPortalAnimation;
 
         private Harmony _harmony;
+        private bool _wasOnCooldown;
 
         private void Awake()
         {
@@ -64,6 +65,7 @@ namespace Homeward
 
             Flight.Update(player);
             Channel.Update(player);
+            UpdateCooldownFeedback(player);
 
             if (IsTyping() || !Hotkey.Value.IsDown())
             {
@@ -78,6 +80,17 @@ namespace Homeward
             {
                 Channel.TryStart(player);
             }
+        }
+
+        private void UpdateCooldownFeedback(Player player)
+        {
+            bool onCooldown = Cooldown.RemainingSeconds(player) > 0;
+            CooldownEffect.Sync(player);
+            if (_wasOnCooldown && !onCooldown && !player.IsDead())
+            {
+                player.Message(MessageHud.MessageType.TopLeft, "Homeward is ready.");
+            }
+            _wasOnCooldown = onCooldown;
         }
 
         private static bool IsTyping()

@@ -3,7 +3,7 @@
 An MMO-style recall for Valheim. Press a key, channel for a few seconds,
 get teleported to your claimed bed. 60-minute cooldown (configurable).
 
-**Status:** Phase 2 verified in-game (2026-09-22). Next: Phase 3 polish or straight to Phase 4 ship.
+**Status:** 0.3.0 — cooldown buff icon built and deployed 2026-09-22, awaiting in-game test.
 
 **Repo:** https://github.com/Sloth-Canopy/valheim-mod-tp-to-home (private)
 API is verified. Next step is writing the Phase 1 plugin.
@@ -28,6 +28,7 @@ src/                 the mod; `dotnet build -c Release` deploys
   Flight.cs          in-flight tracking, stamps cooldown on arrival
   Cooldown.cs        real-time cooldown in Player.m_customData
   Patches.cs         Harmony patches (damage, portal swirl, action bar)
+  CooldownEffect.cs  buff-bar icon; a StatusEffect that mirrors the cooldown
 ```
 
 ## Quick facts
@@ -37,7 +38,7 @@ src/                 the mod; `dotnet build -c Release` deploys
 | Game version | Valheim 1.0.15 |
 | Mod loader | BepInEx 5.4.23.x (via r2modman profile `canpoy-mods`) |
 | Patching | HarmonyX (bundled with BepInEx) |
-| Helper lib | Jötunn 2.30.2 (already in the profile; optional until Phase 3) |
+| Helper lib | none — BepInEx + Harmony only |
 | Target framework | `net472` |
 | Build SDK | .NET 10 SDK in WSL (`dotnet --version` → 10.0.112) |
 
