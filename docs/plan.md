@@ -43,8 +43,8 @@ before starting the next — the instant-teleport version will tell you whether
 ## Phase 3 — Polish
 - [ ] Jötunn `CustomStatusEffect` for the cooldown icon in the buff bar
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
-- [ ] Config: `CancelOnDamage` toggle
-- [ ] Remaining-cooldown text on early press
+- [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
+- [x] Remaining-cooldown text on early press (landed in Phase 1)
 
 ## Phase 4 — Ship (see `docs/publishing.md`)
 - [ ] `package/` filled in: `manifest.json`, `README.md`, `CHANGELOG.md`, 256×256 `icon.png`
