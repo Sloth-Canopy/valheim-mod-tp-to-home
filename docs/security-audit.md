@@ -45,6 +45,26 @@ The mod never sends chat, never moves, damages or affects another player, and it
 | F6 | **Low** | **An exception in the plugin's `Update` would log at frame rate** and could block hotkey handling. | `Update` wrapped; errors logged at most once per 5 s. |
 | F7 | Info | `AllowWithMetal` is a self-only cheat toggle. | By design; documented in the package README. Server enforcement deliberately out of scope (decision #20). |
 | F8 | Info | Rings for the local player skip validation. | Intended: they come from our own code path in-process; validating would only add a failure mode. |
+| F9 | **Low** | **Build-machine path embedded in the DLL** (`/home/<user>/projects/.../Homeward.pdb`) — discloses the developer's OS username. *Found by the external screening, missed here.* | Release builds now set `DebugType=none`, `Deterministic=true` and `PathMap` to a neutral root. Verified: `strings Homeward.dll` contains no `/home/`, username, or `.pdb`. The 0.6.1 zip that was already shared does contain it. |
+
+## External screening (ChatGPT Codex, 0.6.1 package)
+
+An independent binary/string-level screening of the shipped 0.6.1 zip (report kept
+locally in `docs/external/`, not published) found no high-severity behaviour and
+one new item, F9 above. It also listed nine points a source review must verify
+for the RPC path. Mapping them to the code (`src/ChannelNet.cs`):
+
+| # | Codex asks | Where it's true |
+|---|---|---|
+| 1 | Sender identity can't be spoofed | The sender id is supplied by the game's routed-RPC layer from the peer connection, not from the payload. |
+| 2 | A client can't claim another player's identity | `Validate`: `ZDOMan.GetZDO(who).GetOwner() == sender`. |
+| 3 | Position threshold is strict | `MaxPosDrift = 4 m` from the claimed player's real ZDO position. |
+| 4 | NaN/Infinity and unreasonable coordinates rejected | Finite check on x/y/z; `MaxDrawDistance = 200 m` from the local player. |
+| 5 | Rate limit keyed to an authenticated sender | `_lastStartBySender` is keyed by the game-supplied sender id, after ownership passes. |
+| 6 | Ring cap can't be bypassed by changing identifiers | `MaxOtherRings` counts live ring objects, not ids; ids must be ZDOs the sender owns. |
+| 7 | TTL enforced without a Stop | `RingTtlSeconds = 30` on every ring from another player (`ChannelVfxBehaviour.Update`). |
+| 8 | `RpcStop` can't remove someone else's ring | `OnStop` runs the same ownership check: you can only stop a ring for a ZDO you own. |
+| 9 | Malformed input can't destabilise the game loop | Both handlers and the plugin `Update` are wrapped in try/catch; failures are logged, throttled. |
 
 ## Residual risk (accepted)
 - A peer who *does* own a ZDO (their own player, a dropped item) can draw a ring at that object. Cosmetic, capped, rate-limited, fades in 30 s.

@@ -6,11 +6,19 @@
     <Nullable>disable</Nullable>
     <AssemblyName>Homeward</AssemblyName>
     <RootNamespace>Homeward</RootNamespace>
-    <Version>0.6.1</Version>
+    <Version>0.6.2</Version>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <!-- Don't leak the build machine into the shipped binary: no PDB reference in Release,
+         and source paths mapped to a neutral root in case anything else records them. -->
+    <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildProjectDirectory)=/src</PathMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <!-- Machine-specific paths live in Homeward.local.props (gitignored). See Homeward.local.props.example. -->

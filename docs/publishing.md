@@ -146,6 +146,7 @@ team page, not your login — keep it out of git.
 - [ ] `dependencies` match what the DLL actually references
 - [ ] `icon.png` is 256×256
 - [ ] zip has `manifest.json` at the **root** (not `Homeward/manifest.json`)
+- [ ] `strings package/Homeward.dll | grep -E '/home/|/Users/|\.pdb'` prints nothing (no build-machine paths)
 - [ ] Local-import test passed on the `canpoy-mods` profile
 - [ ] README config table matches the actual config keys
 - [ ] CHANGELOG has an entry

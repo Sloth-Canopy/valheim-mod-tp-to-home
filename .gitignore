@@ -17,3 +17,6 @@ package/*.dll
 
 # packaged zips
 dist/
+
+# external review notes (kept local, not published)
+docs/external/

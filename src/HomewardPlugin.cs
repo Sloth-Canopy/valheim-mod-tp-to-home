@@ -11,7 +11,7 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.6.1";
+        public const string PluginVersion = "0.6.2";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;

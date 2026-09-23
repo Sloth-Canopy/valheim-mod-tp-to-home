@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.2
+- Build no longer embeds the developer's machine path in the DLL (found by an external screening)
+
 ## 0.6.1
 - Security hardening: ring messages from other players are now authenticated (sender must own the player), sanity-checked, capped and rate-limited; RPC handlers and Update isolated from exceptions
 

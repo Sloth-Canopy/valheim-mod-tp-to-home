@@ -1,6 +1,6 @@
 {
   "name": "Homeward",
-  "version_number": "0.6.1",
+  "version_number": "0.6.2",
   "website_url": "https://github.com/Sloth-Canopy/valheim-mod-tp-to-home",
   "description": "MMO-style recall for Valheim. Hotkey teleport to your claimed bed, on a cooldown.",
   "dependencies": [
