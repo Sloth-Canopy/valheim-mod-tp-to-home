@@ -50,7 +50,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Test sound (2026-09-22): plays, liked; default volume lowered 0.5 → 0.3
 - [ ] Tune: color, radius, spin speed, mote density — by eye
 - [x] Multiplayer VFX (2026-09-22): ring is broadcast via routed RPC (`Homeward_ChannelStart/Stop`); every client builds it locally, sound only for your own ring. `ChannelVfxVisibleToOthers` config. Rings fade out on stop and self-destruct after 30 s if a Stop is lost
-- [ ] Test on a server with a friend: they see your ring at your feet, it fades when you vanish, they hear nothing; you see theirs
+- [x] Tested on a server with a friend (2026-09-22): rings visible both ways, no sound leak, friend approves
 - [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
 - [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
 - [x] Remaining-cooldown text on early press (landed in Phase 1)
@@ -58,9 +58,9 @@ before starting the next — the instant-teleport version will tell you whether
 ## Phase 4 — Ship (see `docs/publishing.md`)
 - [x] `package/` filled in: `manifest.json`, `README.md`, `CHANGELOG.md`, 256×256 `icon.png` (procedural, `tools/gen_textures.py`, 2026-09-22)
 - [x] `tools/pack.py` builds `dist/Homeward-<v>.zip`
-- [ ] Local-import test in r2modman passes (Stage 1 in publishing.md)
-- [ ] Profile-export test with friends (Stage 2)
-- [ ] Test on a dedicated server with a friend (multiplayer haunting check)
+- [x] Local-import test in r2modman passes (2026-09-22)
+- [x] Shared with a friend via zip import (2026-09-22)
+- [x] Multiplayer session with a friend on the server — nothing haunted (2026-09-22)
 - [ ] Publish
 
 ## Known gotchas (collected as we go)
