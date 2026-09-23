@@ -11,6 +11,7 @@ C# / netstandard2.1 (Unity 6 API profile) / Unity Mono. Built from WSL with the 
   grep `decompiled/` and add it to that doc before using it.
 - `docs/dev-setup.md` — paths, toolchain, how to regenerate `decompiled/`
 - `docs/publishing.md` — Thunderstore packaging + release checklist
+- `docs/security-audit.md` — threat model, findings, and the triggers for re-auditing (any new RPC, file access, or dependency)
 
 ## Rules
 - Verify game signatures in `decompiled/` — never from memory. Valheim updates

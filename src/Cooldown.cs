@@ -18,8 +18,16 @@ namespace Homeward
             {
                 return 0;
             }
+            long now = NowSeconds();
+            if (lastUsed > now)
+            {
+                // Clock went backwards (or the save was edited). Don't let a future
+                // timestamp lock the player out for longer than one full cooldown.
+                lastUsed = now;
+                player.m_customData[LastUsedKey] = now.ToString();
+            }
             long readyAt = lastUsed + HomewardPlugin.CooldownSeconds.Value;
-            return System.Math.Max(0, readyAt - NowSeconds());
+            return System.Math.Max(0, readyAt - now);
         }
 
         public static string Format(long seconds)

@@ -61,6 +61,8 @@ before starting the next — the instant-teleport version will tell you whether
 - [x] Local-import test in r2modman passes (2026-09-22)
 - [x] Shared with a friend via zip import (2026-09-22)
 - [x] Multiplayer session with a friend on the server — nothing haunted (2026-09-22)
+- [x] Security audit (2026-09-22) — `docs/security-audit.md`; RPC sender authentication, caps, rate limit, exception isolation
+- [ ] Re-test with a friend after the audit fixes (validation must not reject real rings)
 - [ ] Publish
 
 ## Known gotchas (collected as we go)

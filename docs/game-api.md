@@ -150,6 +150,17 @@ Serializable parameter types (`ZRpc.Serialize`, `ZRpc.cs:309–355`): int, uint,
 | `ZNet.GetUID` | `ZNet.cs:2075` | `public static long GetUID()` | Our own peer id, for "send to just me". |
 | `Character.GetZDOID` | `Character.cs:3387` | `public ZDOID GetZDOID()` | Stable key for a player across clients. |
 
+## ZDOMan / ZDO — authenticating RPC senders
+
+| Member | Line | Signature | Notes |
+|---|---|---|---|
+| `ZDOMan.instance` | `ZDOMan.cs:153` | `public static ZDOMan instance` | |
+| `ZDOMan.GetZDO` | `ZDOMan.cs:806` | `public ZDO GetZDO(ZDOID id)` | Null if the object isn't loaded on this client. |
+| `ZDOMan.GetSessionID` | `ZDOMan.cs:1414` | `public static long GetSessionID()` | == `ZNet.GetUID()` (`ZNet.cs:2077`) == the routed-RPC peer id (`ZNet.cs:385` `SetUID`). So `zdo.GetOwner() == sender` authenticates a sender as the owner of that object. |
+| `ZDO.GetOwner` | `ZDO.cs:1354` | `public long GetOwner()` | |
+| `ZDO.GetPosition` | `ZDO.cs:568` | `public Vector3 GetPosition()` | |
+| `ZDOID.None` | `ZDOID.cs:19` | `public static readonly ZDOID None` | |
+
 ## AudioMan (`AudioMan.cs`) — volume routing
 
 | Member | Line | Notes |

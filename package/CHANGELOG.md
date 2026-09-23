@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.1
+- Security hardening: ring messages from other players are now authenticated (sender must own the player), sanity-checked, capped and rate-limited; RPC handlers and Update isolated from exceptions
+
 ## 0.6.0
 - Other players with the mod now see your channeling ring; `ChannelVfxVisibleToOthers`
 - Rings fade out instead of popping

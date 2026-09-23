@@ -11,7 +11,7 @@ namespace Homeward
     {
         public const string PluginGuid = "canpoy.homeward";
         public const string PluginName = "Homeward";
-        public const string PluginVersion = "0.6.0";
+        public const string PluginVersion = "0.6.1";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<KeyboardShortcut> Hotkey;
@@ -29,6 +29,7 @@ namespace Homeward
 
         private Harmony _harmony;
         private bool _wasOnCooldown;
+        private float _lastUpdateError = -60f;
 
         private void Awake()
         {
@@ -73,6 +74,23 @@ namespace Homeward
         }
 
         private void Update()
+        {
+            try
+            {
+                Tick();
+            }
+            catch (System.Exception e)
+            {
+                // Never let a bug here spam the log at frame rate or break input for the game.
+                if (Time.time - _lastUpdateError > 5f)
+                {
+                    _lastUpdateError = Time.time;
+                    Log.LogError($"Update failed: {e}");
+                }
+            }
+        }
+
+        private void Tick()
         {
             Player player = Player.m_localPlayer;
             if (player == null)

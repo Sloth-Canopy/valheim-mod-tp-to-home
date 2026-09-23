@@ -31,5 +31,12 @@ MMO-style recall for Valheim. Press a key, channel for a few seconds, wake up in
 ## Install
 r2modman / Thunderstore Mod Manager. Needs BepInExPack_Valheim.
 
+## Privacy & safety
+- No files are read or written outside the game's own character save (one timestamp for the cooldown).
+- No network activity beyond two in-game RPCs that tell other Homeward users where to draw your ring. Messages from other players are validated (sender must own the player they claim, position must match) and capped.
+- No telemetry, no update checks, no dependencies beyond BepInEx. Open source; build it yourself if you'd rather.
+- `AllowWithMetal` is a client-side choice — it isn't enforced by the server.
+
 ## Known issues
-- (none yet, which means we haven't tested enough)
+- The ring sits at a fixed height, so on steep slopes one edge can clip into the ground.
+- Other players who join mid-channel won't see a ring already in progress.
