@@ -3,6 +3,9 @@
   <PropertyGroup>
     <!-- The r2modman profile the mod should deploy into. -->
     <R2Profile>/mnt/c/Users/YOUR_WINDOWS_USER/AppData/Roaming/r2modmanPlus-local/Valheim/profiles/YOUR_PROFILE</R2Profile>
+    <!-- After importing the package zip into r2modman as a local mod, deploy into the folder it made
+         (named <Author>-Homeward) so builds replace the copy the game actually loads. -->
+    <!-- <DeployDir>$(R2Profile)/BepInEx/plugins/YOUR_AUTHOR-Homeward</DeployDir> -->
     <!-- Only needed if Valheim isn't at the default Steam path. -->
     <!-- <ValheimManaged>/mnt/c/Program Files (x86)/Steam/steamapps/common/Valheim/valheim_Data/Managed</ValheimManaged> -->
   </PropertyGroup>

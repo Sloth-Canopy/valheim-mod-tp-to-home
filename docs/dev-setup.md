@@ -12,7 +12,7 @@ Windows side and are reached through `/mnt/c`.
 | r2modman profile (the one that actually runs) | `/mnt/c/Users/<windows-user>/AppData/Roaming/r2modmanPlus-local/Valheim/profiles/<profile>/` — set in `src/Homeward.local.props` (gitignored, see the `.example`) |
 | BepInEx core DLLs | `<profile>/BepInEx/core/` — `BepInEx.dll`, `0Harmony.dll`, `Mono.Cecil.dll` |
 | Jötunn | `<profile>/BepInEx/plugins/ValheimModding-Jotunn/Jotunn.dll` (2.30.2) |
-| Where our DLL goes | `<profile>/BepInEx/plugins/Homeward/Homeward.dll` (post-build copy) |
+| Where our DLL goes | `<profile>/BepInEx/plugins/Sloth-Homeward/Homeward.dll` — the folder r2modman created on local import; set as `DeployDir` in `src/Homeward.local.props` (post-build copy) |
 | BepInEx log | `<profile>/BepInEx/LogOutput.log` — first place to look when nothing happens |
 
 Other mods in the profile: PlantEverything, FreeFuelSource, EquipmentAndQuickSlots,

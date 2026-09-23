@@ -18,7 +18,8 @@
   <PropertyGroup>
     <ValheimManaged Condition="'$(ValheimManaged)' == ''">/mnt/c/Program Files (x86)/Steam/steamapps/common/Valheim/valheim_Data/Managed</ValheimManaged>
     <BepInExCore>$(R2Profile)/BepInEx/core</BepInExCore>
-    <DeployDir>$(R2Profile)/BepInEx/plugins/Homeward</DeployDir>
+    <!-- r2modman names the folder <Author>-Homeward after a local import; set DeployDir in local props to match. -->
+    <DeployDir Condition="'$(DeployDir)' == ''">$(R2Profile)/BepInEx/plugins/Homeward</DeployDir>
     <PackageDir>$(MSBuildThisFileDirectory)../package</PackageDir>
   </PropertyGroup>
   <Target Name="RequireLocalProps" BeforeTargets="ResolveAssemblyReferences" Condition="'$(R2Profile)' == ''">

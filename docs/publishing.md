@@ -90,9 +90,10 @@ not the code.
 **Gotcha:** the post-build copy puts the DLL in the profile *behind r2modman's
 back*. r2modman doesn't list it, and **profile export won't include it**. To
 share with friends you must import the zip as a local mod first (Stage 1), then
-export. After importing, r2modman manages `BepInEx/plugins/canpoy-Homeward/` (or
-similar) — the hand-copied `plugins/Homeward/` folder should be removed so two
-copies don't load.
+export. After importing, r2modman manages `BepInEx/plugins/<Author>-Homeward/`
+(`Sloth-Homeward` here) — point `DeployDir` in `src/Homeward.local.props` at it
+so builds replace the copy the game loads, and remove any hand-copied
+`plugins/Homeward/` folder so two copies don't load.
 
 ## Stage 2 — Give it to friends without publishing
 

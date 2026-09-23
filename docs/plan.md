@@ -51,7 +51,7 @@ before starting the next — the instant-teleport version will tell you whether
 - [ ] Tune: color, radius, spin speed, mote density — by eye
 - [x] Multiplayer VFX (2026-09-22): ring is broadcast via routed RPC (`Homeward_ChannelStart/Stop`); every client builds it locally, sound only for your own ring. `ChannelVfxVisibleToOthers` config. Rings fade out on stop and self-destruct after 30 s if a Stop is lost
 - [x] Tested on a server with a friend (2026-09-22): rings visible both ways, no sound leak, friend approves
-- [ ] ServerSync: server-enforced `CooldownSeconds` / `AllowWithMetal` / `CastSeconds`
+- ~~ServerSync~~ — skipped by decision #20 (local config only)
 - [x] Config: `CancelOnDamage` toggle (landed in Phase 2)
 - [x] Remaining-cooldown text on early press (landed in Phase 1)
 

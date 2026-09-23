@@ -27,6 +27,8 @@ Settled choices. If you want to change one, change it here first and say why.
 
 | 19 | Showing the ring to others | **Routed RPC broadcast** (`ZRoutedRpc` to `Everybody`), each client builds the ring itself — not a networked prefab | No ZNetView/prefab registration, no ZDO, no ordering issues; broadcast is delivered locally too so there's one code path. Costs: late joiners miss an in-progress channel (8 s window, fine) and a lost Stop needs a TTL (30 s). **Sound is deliberately never sent** — it's feedback for the channeler, noise for everyone else. |
 
+| 20 | ServerSync | **Not doing it** (decided 2026-09-22) | Each player's own cfg rules them. It's a friends' server; if someone cheeses the cooldown, that's a conversation, not a feature. Revisit only if strangers ever run it. |
+
 ## Open questions
 - Should the cooldown be per-world too (key by world UID) or per-character (current)? Leaning per-character. Revisit after playing with it.
 - Cancel-on-movement tolerance: how far is "moved"? Start with 0.1 units and tune.
